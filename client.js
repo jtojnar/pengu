@@ -10,6 +10,18 @@ function getParameterByName(name) {
 		return decodeURIComponent(results[1].replace(/\+/g, " "));
 	}
 }
+
+Object.prototype.removeItem = function (key) {
+	if(!this.hasOwnProperty(key)){
+		return;
+	}
+	if(isNaN(parseInt(key)) || !(this instanceof Array)) {
+		delete this[key];
+	} else {
+		this.splice(key, 1);
+	}
+};
+
 $(function () {
 	var view = $('#view');
 	var myName = null;
@@ -43,12 +55,19 @@ $(function () {
 			console.log('This doesn\'t look like a valid JSON: ', message.data);
 			return;
 		}
-		console.log();
-		if(json.type === 'enter') { // first response from the server with user's color
+		if(json.type === 'sync') { // first response from the server with user's color
+			console.log(json.data);
+			for(var key in json.data) {
+				if(json.data.hasOwnProperty(key)){
+					addPlayer(key, json.data[key][0], json.data[key][1]);
+					movePlayer(key, json.data[key][0], json.data[key][1]);
+				}
+			}
+		} else if(json.type === 'enter') {
 			addPlayer(json.name);
-		} else if(json.type === 'exit') { // entire message history
+		} else if(json.type === 'exit') {
 			removePlayer(json.name);
-		} else if(json.type === 'move') { // it's a single message
+		} else if(json.type === 'move') {
 			movePlayer(json.name, json.x, json.y);
 		} else {
 			console.log('Hmm..., I\'ve never seen JSON like this: ', json);
@@ -79,10 +98,11 @@ $(function () {
 		view.append(players[name]);
 	}
 	function movePlayer(name, x, y) {
+		if(16 <= x && x <= view.width() - 16 && 16 <= y && y <= view.height() - 16)
 		players[name].css({top: y, left:x});
 	}
 	function removePlayer(name) {
-		view.remove(players[name]);
-		players[name] = null;
+		players[name].remove();
+		players.removeItem(name);
 	}
 });
