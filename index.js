@@ -7,8 +7,7 @@ var WebSocketServer = require('websocket').server;
 var http = require('http');
 var fs = require('fs');
 var url = require('url');
-var host = process.env.SUBDOMAIN ? process.env.SUBDOMAIN + '.nodejitsu.com' : 'localhost';
-var  port = 8080;
+var express = require('express');
 
 Object.prototype.removeItem = function (key) {
 	if(!this.hasOwnProperty(key)){
@@ -21,53 +20,23 @@ Object.prototype.removeItem = function (key) {
 	}
 };
 
-var server = http.createServer(function(request, response) {
-	var path = url.parse(request.url).pathname;
-	if(path == '/') {
-		response.writeHead(200, { 'Content-Type': 'text/html' });
-		response.end('<script>window.location.href = "/chat?u=" + encodeURIComponent(prompt("Zadej jmeno"));</script>', 'utf-8');
-	} else if(path == '/chat') {
-		fs.readFile(__dirname + '/client.html', function(error, content) {
-			if(error) {
-				console.error(error);
-				response.writeHead(500);
-				response.end();
-			} else {
-				response.writeHead(200, { 'Content-Type': 'text/html' });
-				response.end(content, 'utf-8');
-			}
-		});
-	} else if(path == '/client.js') {
-		fs.readFile(__dirname + '/client.js', function(error, content) {
-			if(error) {
-				console.error(error);
-				response.writeHead(500);
-				response.end();
-			} else {
-				response.writeHead(200, { 'Content-Type': 'text/javascript' });
-				response.end(content.toString().replace('%url%', host + ':' + port), 'utf-8');
-			}
-		});
-	} else if(path == '/tux.png') {
-		fs.readFile(__dirname + '/tux.png', function(error, content) {
-			if(error) {
-				console.error(error);
-				response.writeHead(500);
-				response.end();
-			} else {
-				response.writeHead(200, { 'Content-Type': 'image/png' });
-				response.end(content, 'utf-8');
-			}
-		});
-	} else {
-		console.log((new Date()) + ' Received request for ' + path);
-		response.writeHead(404);
-		response.end();
-	}
+var app = express();
+
+app.configure(function(){
+	app.set('port', process.env.PORT || 8080);
+	app.use(express.static(__dirname));
 });
-server.listen(port, function() {
-	console.log((new Date()) + ' Server is listening on port ' + port);
+app.configure('development', function(){
+	app.use(express.logger());
 });
+
+
+app.get('/', function(req, res){
+	res.send('<script>window.location.href = "/client.html?u=" + encodeURIComponent(prompt("Zadej jmeno"));</script>');
+});
+
+var server = http.createServer(app).listen(app.get('port'));
+console.log('Started app on port %d', app.get('port'));
 
 var wsServer = new WebSocketServer({
 	httpServer: server,
