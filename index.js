@@ -7,6 +7,8 @@ var WebSocketServer = require('websocket').server;
 var http = require('http');
 var fs = require('fs');
 var url = require('url');
+var host = process.env.SUBDOMAIN || 'localhost';
+var  port = 8080;
 
 Object.prototype.removeItem = function (key) {
 	if(!this.hasOwnProperty(key)){
@@ -43,7 +45,7 @@ var server = http.createServer(function(request, response) {
 				response.end();
 			} else {
 				response.writeHead(200, { 'Content-Type': 'text/javascript' });
-				response.end(content, 'utf-8');
+				response.end(content.toString().replace('%url%', host + ':' + port), 'utf-8');
 			}
 		});
 	} else if(path == '/tux.png') {
@@ -63,8 +65,8 @@ var server = http.createServer(function(request, response) {
 		response.end();
 	}
 });
-server.listen(8080, function() {
-	console.log((new Date()) + ' Server is listening on port 8080');
+server.listen(port, function() {
+	console.log((new Date()) + ' Server is listening on port ' + port);
 });
 
 var wsServer = new WebSocketServer({
