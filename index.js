@@ -7,7 +7,7 @@ var WebSocketServer = require('websocket').server;
 var http = require('http');
 var fs = require('fs');
 var url = require('url');
-var host = process.env.SUBDOMAIN || 'localhost';
+var host = process.env.SUBDOMAIN ? process.env.SUBDOMAIN + '.nodejitsu.com' : 'localhost';
 var  port = 8080;
 
 Object.prototype.removeItem = function (key) {
