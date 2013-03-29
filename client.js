@@ -34,7 +34,7 @@ $(function () {
 		return;
 	}
 
-	var connection = new WebSocket('ws://%url%', 'pengu');
+	var connection = new WebSocket('ws://pengu.jit.su');
 
 	connection.onopen = function () {
 		connection.send(JSON.stringify({type: 'init', name: getParameterByName('u')}));

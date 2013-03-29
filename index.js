@@ -71,6 +71,7 @@ server.listen(port, function() {
 
 var wsServer = new WebSocketServer({
 	httpServer: server,
+	port: 1337,
 	autoAcceptConnections: false
 });
 
