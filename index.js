@@ -48,9 +48,20 @@ function originIsAllowed(origin) {
 	return true;
 }
 
-function isInPolygon(door, x, y) {
+function isInRect(door, x, y) {
 	return x >= door[0][0] && x <= door[1][0] && y >= door[0][1] && y <= door[1][1];
 }
+
+function isInPoly(nvert, points, test) {
+	var i, j, c = 0;
+	for(var i = 0, j = nvert-1; i < nvert; j = i++) {
+		if(((points[i][1]>test[1]) != (points[j][1]>test[1])) && (test[0] < (points[j][0]-points[i][0]) * (test[1]-points[i][1]) / (points[j][1]-points[i][1]) + points[i][0])){
+			c = !c;
+		}
+	}
+	return c;
+}
+
 var clients = [];
 var players = {};
 var rooms = {
@@ -69,7 +80,7 @@ var rooms = {
 			[[417,138], [516,309], 'plaza']
 		],
 		zones: [
-		[[19,270], [9,270], [17,263], [19,265], [83,253], [82,320], [125,320], [131,243], [189,242], [183,323], [227,325], [240,229], [315,244], [300,341], [365,334], [368,261], [428,257], [417,339], [455,342], [473,237], [546,259], [485,341], [585,304], [611,365], [665,345], [733,403], [772,391], [732,277], [800,294], [784,296], [797,599], [788,589], [786,594], [776,599], [781,586], [792,581], [785,579], [780,581], [359,589], [366,577], [445,528], [393,457], [309,466], [234,510], [235,546], [287,598], [277,581], [281,599], [18,590], [17,583], [13,273], [17,278]]
+		[[158,296], [217,290], [151,507], [294,521], [407,314], [413,142], [539,150], [529,311], [791,331], [797,332], [797,339], [787,340], [777,341], [785,579], [782,586], [776,582], [8,588], [8,584], [14,582], [16,583], [153,297]]
 		]
 	}
 }
@@ -103,7 +114,7 @@ wsServer.on('request', function(request) {
 					for(var key in rooms[room].doors){
 						if(!rooms[room].doors.hasOwnProperty(key)) continue;
 						var door = rooms[room].doors[key];
-						if(isInPolygon(door, json.x, json.y)) {
+						if(isInRect(door, json.x, json.y)) {
 							travel = true;
 							console.log(name + ' jumped to ' + door[2]);
 							room = door[2];
@@ -113,7 +124,7 @@ wsServer.on('request', function(request) {
 							}
 						}
 					}
-					if(!travel){
+					if(!travel && isInPoly(rooms[room].zones[0].length, rooms[room].zones[0], [json.x, json.y])){
 						console.log('Moving ' + name + ' to [' + json.x + ',' + json.y + ']');
 						players[name] = [json.x, json.y, players[name][2]];
 						for(var i=0; i < clients.length; i++) {
