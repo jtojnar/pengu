@@ -93,10 +93,10 @@ wsServer.on('request', function(request) {
 				if(json.type == 'init' && name == null) {
 					name = json.name;
 					connection.sendUTF(JSON.stringify({type: 'sync', name: name, data: players}));
-					players[name] = [0, 0];
+					players[name] = [0, 0, 'plaza'];
 					console.info('Initial handshake with ' + name);
 					for(var i=0; i < clients.length; i++) {
-						clients[i].sendUTF(JSON.stringify({type: 'enter', name: name}));
+						clients[i].sendUTF(JSON.stringify({type: 'enter', name: name, room: players[name][2]}));
 					}
 				} else if(json.type == 'move') {
 					var travel = false;

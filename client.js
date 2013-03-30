@@ -25,7 +25,7 @@ Object.prototype.removeItem = function (key) {
 $(function () {
 	var view = $('#view');
 	var myName = null;
-	var room = 'plaza';
+	var myRoom = 'plaza';
 	var players = {};
 
 	window.WebSocket = window.WebSocket || window.MozWebSocket;
@@ -60,24 +60,33 @@ $(function () {
 			myName = json.name;
 			for(var key in json.data) {
 				if(json.data.hasOwnProperty(key)){
-					addPlayer(key, json.data[key][0], json.data[key][1]);
+					addPlayer(key, json.data[key][2]);
 					movePlayer(key, json.data[key][0], json.data[key][1]);
 				}
 			}
 		} else if(json.type === 'enter') {
-			addPlayer(json.name);
+			addPlayer(json.name, json.room);
 		} else if(json.type === 'exit') {
 			removePlayer(json.name);
 		} else if(json.type === 'move') {
 			movePlayer(json.name, json.x, json.y);
 		} else if(json.type === 'travel') {
-			if(json.room == room) {
+			players[json.name].attr('data-room', json.room);
+			if(json.room == myRoom) {
 				showPlayer(json.name);
 			} else {
 				if(json.name == myName) {
 					view.css('background-image', 'url(' + json.image + ')');
-					room = json.room;
-
+					myRoom = json.room;
+					for(var key in players) {
+						if(players.hasOwnProperty(key)){
+							if(players[key].attr('data-room') == myRoom) {
+								showPlayer(key);
+							} else {
+								hidePlayer(key);
+							}
+						}
+					}
 				} else {
 					hidePlayer(json.name);
 				}
@@ -104,9 +113,11 @@ $(function () {
 		}
 	}, 3000);
 
-	function addPlayer(name) {
-		players[name] = $('<div data-name="'+name+'" class="penguin"></div>');
-		showPlayer(name);
+	function addPlayer(name, room) {
+		players[name] = $('<div data-name="'+name+'" data-room="'+room+'" class="penguin"></div>');
+		if(room == myRoom) {
+			showPlayer(name);
+		}
 	}
 	function showPlayer(name) {
 		view.append(players[name]);
