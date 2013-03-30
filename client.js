@@ -25,6 +25,7 @@ Object.prototype.removeItem = function (key) {
 $(function () {
 	var view = $('#view');
 	var myName = null;
+	var room = 'plaza';
 	var players = {};
 
 	window.WebSocket = window.WebSocket || window.MozWebSocket;
@@ -55,8 +56,8 @@ $(function () {
 			console.log('This doesn\'t look like a valid JSON: ', message.data);
 			return;
 		}
-		if(json.type === 'sync') { // first response from the server with user's color
-			console.log(json.data);
+		if(json.type === 'sync') {
+			myName = json.name;
 			for(var key in json.data) {
 				if(json.data.hasOwnProperty(key)){
 					addPlayer(key, json.data[key][0], json.data[key][1]);
@@ -68,6 +69,19 @@ $(function () {
 		} else if(json.type === 'exit') {
 			removePlayer(json.name);
 		} else if(json.type === 'move') {
+			movePlayer(json.name, json.x, json.y);
+		} else if(json.type === 'travel') {
+			if(json.room == room) {
+				showPlayer(json.name);
+			} else {
+				if(json.name == myName) {
+					view.css('background-image', 'url(' + json.image + ')');
+					room = json.room;
+
+				} else {
+					hidePlayer(json.name);
+				}
+			}
 			movePlayer(json.name, json.x, json.y);
 		} else {
 			console.log('Hmm..., I\'ve never seen JSON like this: ', json);
@@ -90,11 +104,11 @@ $(function () {
 		}
 	}, 3000);
 
-	/**
-	 * Add message to the chat window
-	 */
 	function addPlayer(name) {
 		players[name] = $('<div data-name="'+name+'" class="penguin"></div>');
+		showPlayer(name);
+	}
+	function showPlayer(name) {
 		view.append(players[name]);
 	}
 	function movePlayer(name, x, y) {
@@ -103,6 +117,9 @@ $(function () {
 	}
 	function removePlayer(name) {
 		players[name].remove();
-		players.removeItem(name);
+		hidePlayer(name);
+	}
+	function hidePlayer(name) {
+		players[name].remove();
 	}
 });
