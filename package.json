@@ -1,7 +1,7 @@
 {
 	"name": "pengu",
 	"description": "simple html5 club penguin client-server",
-	"version": "0.0.1-15",
+	"version": "0.0.1-16",
 	"private": true,
 	"dependencies": {
 		"express": "3.x",
