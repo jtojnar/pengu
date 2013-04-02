@@ -91,6 +91,7 @@ var players = {};
 var rooms = {
 	plaza: {
 		image: 'plaza.png',
+		spawn: new Point(270, 370),
 		zones: [
 			[new Polygon(new Point(0,267), new Point(248,225), new Point(537,253), new Point(799,291), new Point(799,599), new Point(0,599)), 'floor'],
 			[new Polygon(new Point(120,314), new Point(119,329), new Point(186,334), new Point(188,316)), 'door', 'bar'],
@@ -103,6 +104,7 @@ var rooms = {
 	},
 	bar: {
 		image: 'bar.png',
+		spawn: new Point(450, 330),
 		zones: [
 			[new Polygon(new Point(153,291), new Point(0,571), new Point(0,599), new Point(799,599), new Point(799,331)), 'floor'],
 			[new Polygon(new Point(407,298), new Point(398,332), new Point(535,346), new Point(536,305)), 'door', 'plaza'],
@@ -112,6 +114,7 @@ var rooms = {
 	},
 	chom: {
 		image: 'chom.png',
+		spawn: new Point(360, 540),
 		zones: [
 			[new Polygon(new Point(0,470), new Point(256,471), new Point(296,521), new Point(426,527), new Point(391,476), new Point(799,469), new Point(799,599), new Point(0,599)), 'floor'],
 			[new Polygon(new Point(298,508), new Point(292,543), new Point(441,555), new Point(438,512)), 'door', 'plaza'],
@@ -152,16 +155,26 @@ wsServer.on('request', function(request) {
 					if(rooms[room].zones[0][0].containsPoint(target)) {
 						console.log('Moving ' + name + ' to ' + target);
 						players[name] = [target.x, target.y, players[name][2]];
-						for(var i=0; i < clients.length; i++) {
-							clients[i].sendUTF(JSON.stringify({type: 'move', name: name, x: players[name][0], y: players[name][1]}));
+						for(var i=0; i< rooms[room].zones.length; i++) {
+							var zone = rooms[room].zones[i];
+							if(zone[1] == 'door' && zone[0].containsPoint(target)) {
+								room = travel = zone[2];
+								console.log(name + ' goes to ' + travel);
+								players[name][2] = travel;
+								break;
+							}
 						}
-						// travel = true;
-						// console.log(name + ' jumped to ' + door[2]);
-						// room = door[2];
-						// players[name] = [json.x, json.y, door[2]];
-						// for(var i=0; i < clients.length; i++) {
-						// 	clients[i].sendUTF(JSON.stringify({type: 'travel', name: name, room: door[2], image: rooms[door[2]].image}));
-						// }
+						var msg = {type: 'move', name: name, x: players[name][0], y: players[name][1]};
+						if(travel) {
+							msg.travel = travel;
+							msg.newX = rooms[travel].spawn.x;
+							msg.newY = rooms[travel].spawn.y;
+							players[name][0] = rooms[travel].spawn.x;
+							players[name][1] = rooms[travel].spawn.y;
+						}
+						for(var i=0; i < clients.length; i++) {
+							clients[i].sendUTF(JSON.stringify(msg));
+						}
 					}
 				} else if(json.type == 'message') {
 					console.log(name + ' said ' + json.text);

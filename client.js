@@ -71,29 +71,12 @@ $(function () {
 		} else if(json.type === 'exit') {
 			removePlayer(json.name);
 		} else if(json.type === 'move') {
-			movePlayer(json.name, json.x, json.y);
-		} else if(json.type === 'travel') {
-			players[json.name].attr('data-room', json.room);
-			if(json.room == myRoom) {
-				showPlayer(json.name);
+			if(json.travel) {
+				movePlayer(json.name, json.x, json.y, json.travel, json.newX, json.newY);
+				players[json.name].attr('data-room', json.room);
 			} else {
-				if(json.name == myName) {
-					view.css('background-image', 'url(' + json.image + ')');
-					myRoom = json.room;
-					for(var key in players) {
-						if(players.hasOwnProperty(key)){
-							if(players[key].attr('data-room') == myRoom) {
-								showPlayer(key);
-							} else {
-								hidePlayer(key);
-							}
-						}
-					}
-				} else {
-					hidePlayer(json.name);
-				}
+				movePlayer(json.name, json.x, json.y);
 			}
-			movePlayer(json.name, json.x, json.y);
 		} else if(json.type === 'say') {
 			speakForPlayer(json.name, json.text);
 		} else {
@@ -128,13 +111,42 @@ $(function () {
 	function showPlayer(name) {
 		view.append(players[name]);
 	}
-	function movePlayer(name, x, y) {
+	function movePlayer(name, x, y, room, newX, newY) {
 		// if(16 <= x && x <= view.width() - 16 && 16 <= y && y <= view.height() - 16)
 		var left = players[name].css('left').slice(0, -2);
 		var top = players[name].css('top').slice(0, -2);
 		var distance = Math.sqrt(Math.pow(left - x, 2) + Math.pow(top - y, 2));
-		console.log([top, left]);
-		players[name].animate({top: y, left: x}, distance / speed * 1000, 'linear');
+		console.log(room);
+
+		var handler = function() {}
+		var travel = false;
+		if(typeof room !== 'undefined') {
+			handler = function() {
+				if(room == myRoom) {
+					showPlayer(name);
+				} else {
+					if(name == myName) {
+						view.css('background-image', 'url(' + room + '.png)');
+						myRoom = room;
+						travel = true;
+						players[myName].attr('data-room', myRoom);
+						players[myName].css({top: newY, left: newX});
+						for(var key in players) {
+							if(players.hasOwnProperty(key)){
+								if(players[key].attr('data-room') == myRoom) {
+									showPlayer(key);
+								} else {
+									hidePlayer(key);
+								}
+							}
+						}
+					} else {
+						hidePlayer(name);
+					}
+				}
+			}
+		}
+		players[name].animate({top: y, left: x}, distance / speed * 1000, 'linear', handler);
 	}
 	function removePlayer(name) {
 		players[name].remove();
