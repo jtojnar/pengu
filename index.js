@@ -146,8 +146,7 @@ wsServer.on('request', function(request) {
 					players[name] = [550, 500, 'plaza'];
 					console.info('Initial handshake with ' + name);
 					for(var i=0; i < clients.length; i++) {
-						clients[i].sendUTF(JSON.stringify({type: 'enter', name: name, room: players[name][2]}));
-						clients[i].sendUTF(JSON.stringify({type: 'move', name: name, x: players[name][0], y: players[name][1]}));
+						clients[i].sendUTF(JSON.stringify({type: 'enter', name: name, room: players[name][2], x: players[name][0], y:players[name][1]}));
 					}
 				} else if(json.type == 'move') {
 					var travel = false;

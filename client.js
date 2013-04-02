@@ -67,7 +67,7 @@ $(function () {
 				}
 			}
 		} else if(json.type === 'enter') {
-			addPlayer(json.name, json.room);
+			addPlayer(json.name, json.room, json.x, json.y);
 		} else if(json.type === 'exit') {
 			removePlayer(json.name);
 		} else if(json.type === 'move') {
@@ -102,8 +102,11 @@ $(function () {
 		}
 	}, 3000);
 
-	function addPlayer(name, room) {
+	function addPlayer(name, room, x, y) {
 		players[name] = $('<div data-name="'+name+'" data-room="'+room+'" class="penguin"><div class="message"><p>I am a penguin eating zebra filled with bubblegum</p></div></div>');
+		if(typeof x !== 'undefined') {
+			players[myName].css({top: y, left: x});
+		}
 		if(room == myRoom) {
 			showPlayer(name);
 		}
