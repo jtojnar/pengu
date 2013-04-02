@@ -8,8 +8,12 @@ var http = require('http');
 var fs = require('fs');
 var url = require('url');
 var express = require('express');
+var poly = require('./poly');
+var Point = poly.Point;
+var Polygon = poly.Polygon;
+var Line = poly.Line;
 
-Object.prototype.removeItem = function (key) {
+Object.prototype.removeItem = function(key) {
 	if(!this.hasOwnProperty(key)){
 		return;
 	}
@@ -18,6 +22,9 @@ Object.prototype.removeItem = function (key) {
 	} else {
 		this.splice(key, 1);
 	}
+};
+Array.prototype.pushArray = function(arr) {
+	this.push.apply(this, arr);
 };
 
 var app = express();
@@ -48,18 +55,35 @@ function originIsAllowed(origin) {
 	return true;
 }
 
-function isInRect(door, x, y) {
-	return x >= door[0][0] && x <= door[1][0] && y >= door[0][1] && y <= door[1][1];
-}
+// function isInRect(door, x, y) {
+// 	return x >= door[0][0] && x <= door[1][0] && y >= door[0][1] && y <= door[1][1];
+// }
 
-function isInPoly(nvert, points, test) {
-	var i, j, c = 0;
-	for(var i = 0, j = nvert-1; i < nvert; j = i++) {
-		if(((points[i][1]>test[1]) != (points[j][1]>test[1])) && (test[0] < (points[j][0]-points[i][0]) * (test[1]-points[i][1]) / (points[j][1]-points[i][1]) + points[i][0])){
-			c = !c;
+function getTarget(room, line) {
+	var gap = 5;
+	var intersections = [];
+	for(var i = room.zones.length - 1; i >= 0; i--) {
+		var zone = room.zones[i];
+		if(zone[1] == 'floor' || zone[1] == 'obstacle') {
+			intersections.pushArray(zone[0].getIntersections(line));
 		}
 	}
-	return c;
+	if(intersections.length > 0){
+		var closest = null, closestDistance;
+		for(var i = intersections.length - 1; i >= 0; i--) {
+			var intersection = intersections[i];
+			var distance = line.start.getDistance(intersection);
+			if(!closest || closestDistance > distance) {
+				closestDistance = distance;
+				closest = intersection;
+			}
+		}
+	} else {
+		closest = line.end;
+	}
+	closest.x += gap / line.getLength() * (line.start.x - line.end.x);
+	closest.y += gap / line.getLength() * (line.start.y - line.end.y);
+	return closest;
 }
 
 var clients = [];
@@ -67,30 +91,32 @@ var players = {};
 var rooms = {
 	plaza: {
 		image: 'plaza.png',
-		doors: [
-			[[132,241], [182,322], 'bar'],
-			[[373,265], [413,337], 'chom'],
-		],
 		zones: [
-		[[19,270], [9,270], [17,263], [19,265], [83,253], [82,320], [125,320], [131,243], [189,242], [183,323], [227,325], [240,229], [315,244], [300,341], [365,334], [368,261], [428,257], [417,339], [455,342], [473,237], [546,259], [485,341], [585,304], [611,365], [665,345], [733,403], [772,391], [732,277], [800,294], [784,296], [797,599], [788,589], [786,594], [776,599], [781,586], [792,581], [785,579], [780,581], [359,589], [366,577], [445,528], [393,457], [309,466], [234,510], [235,546], [287,598], [277,581], [281,599], [18,590], [17,583], [13,273], [17,278]]
-		]
+			[new Polygon(new Point(0,267), new Point(248,225), new Point(537,253), new Point(799,291), new Point(799,599), new Point(0,599)), 'floor'],
+			[new Polygon(new Point(120,314), new Point(119,329), new Point(186,334), new Point(188,316)), 'door', 'bar'],
+			[new Polygon(new Point(358,327), new Point(354,342), new Point(425,345), new Point(426,328)), 'door', 'chom'],
+			[new Polygon(new Point(243,526), new Point(263,487), new Point(341,457), new Point(395,465), new Point(441,501), new Point(428,551), new Point(311,579), new Point(264,562)), 'obstacle'], //fountain
+			[new Polygon(new Point(84,255), new Point(77,318), new Point(225,319), new Point(235,228)), 'obstacle'], //house1
+			[new Polygon(new Point(313,232), new Point(296,329), new Point(454,337), new Point(468,247)), 'obstacle'], //house2
+			[new Polygon(new Point(549,254), new Point(492,306), new Point(489,344), new Point(534,332), new Point(592,292), new Point(608,363), new Point(635,372), new Point(659,334), new Point(711,391), new Point(740,393), new Point(774,386), new Point(733,310), new Point(737,284)), 'obstacle'], //blob
+		],
 	},
 	bar: {
 		image: 'bar.png',
-		doors: [
-			[[417,138], [516,309], 'plaza']
-		],
 		zones: [
-		[[158,296], [217,290], [151,507], [294,521], [407,314], [413,142], [539,150], [529,311], [791,331], [797,332], [797,339], [787,340], [777,341], [785,579], [782,586], [776,582], [8,588], [8,584], [14,582], [16,583], [153,297]]
+			[new Polygon(new Point(153,291), new Point(0,571), new Point(0,599), new Point(799,599), new Point(799,331)), 'floor'],
+			[new Polygon(new Point(407,298), new Point(398,332), new Point(535,346), new Point(536,305)), 'door', 'plaza'],
+			[new Polygon(new Point(594,315), new Point(596,348), new Point(698,348), new Point(689,312)), 'sound', 'piano'],
+			[new Polygon(new Point(154,505), new Point(295,509), new Point(400,306), new Point(255,296)), 'obstacle'], //bar
 		]
 	},
 	chom: {
 		image: 'chom.png',
-		doors: [
-			[[310,295], [415,517], 'plaza']
-		],
 		zones: [
-		[[20,576], [253,519], [309,544], [310,295], [415,517], [434,534], [438,489], [780,487], [779,577], [25,580]]
+			[new Polygon(new Point(0,470), new Point(256,471), new Point(296,521), new Point(426,527), new Point(391,476), new Point(799,469), new Point(799,599), new Point(0,599)), 'floor'],
+			[new Polygon(new Point(298,508), new Point(292,543), new Point(441,555), new Point(438,512)), 'door', 'plaza'],
+			[new Polygon(new Point(550,539), new Point(563,504), new Point(691,492), new Point(712,524)), 'obstacle'], //blue
+			[new Polygon(new Point(70,508), new Point(179,511), new Point(196,543), new Point(48,546)), 'obstacle'], //pink
 		]
 	}
 }
@@ -114,32 +140,28 @@ wsServer.on('request', function(request) {
 				if(json.type == 'init' && name == null) {
 					name = json.name;
 					connection.sendUTF(JSON.stringify({type: 'sync', name: name, data: players}));
-					players[name] = [0, 0, 'plaza'];
+					players[name] = [550, 500, 'plaza'];
 					console.info('Initial handshake with ' + name);
 					for(var i=0; i < clients.length; i++) {
 						clients[i].sendUTF(JSON.stringify({type: 'enter', name: name, room: players[name][2]}));
+						clients[i].sendUTF(JSON.stringify({type: 'move', name: name, x: players[name][0], y: players[name][1]}));
 					}
 				} else if(json.type == 'move') {
 					var travel = false;
-					for(var key in rooms[room].doors){
-						if(!rooms[room].doors.hasOwnProperty(key)) continue;
-						var door = rooms[room].doors[key];
-						if(isInRect(door, json.x, json.y)) {
-							travel = true;
-							console.log(name + ' jumped to ' + door[2]);
-							room = door[2];
-							players[name] = [json.x, json.y, door[2]];
-							for(var i=0; i < clients.length; i++) {
-								clients[i].sendUTF(JSON.stringify({type: 'travel', name: name, room: door[2], image: rooms[door[2]].image}));
-							}
-						}
-					}
-					if(!travel && isInPoly(rooms[room].zones[0].length, rooms[room].zones[0], [json.x, json.y])){
-						console.log('Moving ' + name + ' to [' + json.x + ',' + json.y + ']');
-						players[name] = [json.x, json.y, players[name][2]];
+					var target = getTarget(rooms[room], new Line(new Point(players[name][0], players[name][1]), new Point(json.x, json.y)));
+					if(rooms[room].zones[0][0].containsPoint(target)) {
+						console.log('Moving ' + name + ' to ' + target);
+						players[name] = [target.x, target.y, players[name][2]];
 						for(var i=0; i < clients.length; i++) {
-							clients[i].sendUTF(JSON.stringify({type: 'move', name: name, x: json.x, y: json.y}));
+							clients[i].sendUTF(JSON.stringify({type: 'move', name: name, x: players[name][0], y: players[name][1]}));
 						}
+						// travel = true;
+						// console.log(name + ' jumped to ' + door[2]);
+						// room = door[2];
+						// players[name] = [json.x, json.y, door[2]];
+						// for(var i=0; i < clients.length; i++) {
+						// 	clients[i].sendUTF(JSON.stringify({type: 'travel', name: name, room: door[2], image: rooms[door[2]].image}));
+						// }
 					}
 				}
 			} catch(ex) {
