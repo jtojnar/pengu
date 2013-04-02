@@ -60,7 +60,7 @@ function originIsAllowed(origin) {
 // }
 
 function getTarget(room, line) {
-	var gap = 5;
+	var gap = 20;
 	var intersections = [];
 	for(var i = room.zones.length - 1; i >= 0; i--) {
 		var zone = room.zones[i];
