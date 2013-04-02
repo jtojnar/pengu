@@ -26,6 +26,7 @@ $(function () {
 	var view = $('#view');
 	var myName = null;
 	var myRoom = 'plaza';
+	var speed = 150; // px per sec
 	var players = {};
 	var msgTimeouts = {};
 
@@ -129,7 +130,11 @@ $(function () {
 	}
 	function movePlayer(name, x, y) {
 		// if(16 <= x && x <= view.width() - 16 && 16 <= y && y <= view.height() - 16)
-		players[name].css({top: y, left:x});
+		var left = players[name].css('left').slice(0, -2);
+		var top = players[name].css('top').slice(0, -2);
+		var distance = Math.sqrt(Math.pow(left - x, 2) + Math.pow(top - y, 2));
+		console.log([top, left]);
+		players[name].animate({top: y, left: x}, distance / speed * 1000, 'linear');
 	}
 	function removePlayer(name) {
 		players[name].remove();
