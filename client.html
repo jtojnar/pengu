@@ -4,11 +4,17 @@
 <meta charset="utf-8">
 <title>Pengu</title>
 <style>
+.container {
+	width: 800px;
+	height: 600px;
+	position: relative;
+	margin: auto;
+	border: 3px solid hsl(215, 70%, 60%);
+	margin: auto;
+}
 #view {
 	width: 800px;
 	height: 600px;
-	border: 3px solid hsl(140, 70%, 60%);
-	margin: auto;
 	position: relative;
 	background: url(plaza.png);
 }
@@ -37,10 +43,41 @@
 	margin-left: -2.5em;
 
 }
+.penguin .message {
+	display: none;
+	position: absolute;
+	bottom: 3em;
+	left: -24px;
+	border-radius: 1em;
+	width: 15em;
+	padding: 1em;
+	background: hsla(215, 20%, 86%, 0.6);
+	border-color: hsla(215, 20%, 86%, 0.5);
+}
+.penguin .message:before {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 32px;
+	border-top: 2em solid transparent;
+	border-top-color: inherit; 
+	border-left: 0.5em solid transparent;
+	border-right: 0.5em solid transparent; 
+}
+#message {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	border: 0;
+}
 </style>
 </head>
 <body>
-<div id="view"></div>
+<div class="container">
+<div id="view">
+</div>
+<input type="text" id="message" placeholder="Piš zprávu sem!">
+</div>
 <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script src="client.js"></script>
 </body>

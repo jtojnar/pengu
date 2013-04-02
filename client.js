@@ -27,6 +27,7 @@ $(function () {
 	var myName = null;
 	var myRoom = 'plaza';
 	var players = {};
+	var msgTimeouts = {};
 
 	window.WebSocket = window.WebSocket || window.MozWebSocket;
 
@@ -92,6 +93,8 @@ $(function () {
 				}
 			}
 			movePlayer(json.name, json.x, json.y);
+		} else if(json.type === 'say') {
+			speakForPlayer(json.name, json.text);
 		} else {
 			console.log('Hmm..., I\'ve never seen JSON like this: ', json);
 		}
@@ -101,11 +104,13 @@ $(function () {
 		connection.send(JSON.stringify({type: 'move', x: e.pageX - $(this).offset().left, y: e.pageY - $(this).offset().top}));
 	});
 
-	/**
-	 * This method is optional. If the server wasn't able to respond to the
-	 * in 3 seconds then show some error message to notify the user that
-	 * something is wrong.
-	 */
+	$('#message').keydown(function(e) {
+		if(e.keyCode == 13){
+			connection.send(JSON.stringify({type: 'message', text: $(this).val()}));
+			$(this).val('');
+		}
+	});
+
 	var monitor = setInterval(function() {
 		if(connection.readyState !== 1) {
 			clearInterval(monitor);
@@ -114,7 +119,7 @@ $(function () {
 	}, 3000);
 
 	function addPlayer(name, room) {
-		players[name] = $('<div data-name="'+name+'" data-room="'+room+'" class="penguin"></div>');
+		players[name] = $('<div data-name="'+name+'" data-room="'+room+'" class="penguin"><p class="message">I am a penguin eating zebra filled with bubblegum</p></div>');
 		if(room == myRoom) {
 			showPlayer(name);
 		}
@@ -123,7 +128,7 @@ $(function () {
 		view.append(players[name]);
 	}
 	function movePlayer(name, x, y) {
-		if(16 <= x && x <= view.width() - 16 && 16 <= y && y <= view.height() - 16)
+		// if(16 <= x && x <= view.width() - 16 && 16 <= y && y <= view.height() - 16)
 		players[name].css({top: y, left:x});
 	}
 	function removePlayer(name) {
@@ -132,5 +137,14 @@ $(function () {
 	}
 	function hidePlayer(name) {
 		players[name].remove();
+	}
+	function speakForPlayer(name, message) {
+		if(msgTimeouts[name]) {
+			clearTimeout(msgTimeouts[name]);
+		}
+		msgTimeouts[name] = setTimeout(function() {
+			players[name].find('.message').hide();
+		}, 5000);
+		players[name].find('.message').show().text(message);
 	}
 });

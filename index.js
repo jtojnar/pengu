@@ -163,6 +163,11 @@ wsServer.on('request', function(request) {
 						// 	clients[i].sendUTF(JSON.stringify({type: 'travel', name: name, room: door[2], image: rooms[door[2]].image}));
 						// }
 					}
+				} else if(json.type == 'message') {
+					console.log(name + ' said ' + json.text);
+					for(var i=0; i < clients.length; i++) {
+						clients[i].sendUTF(JSON.stringify({type: 'say', name: name, text: json.text}));
+					}
 				}
 			} catch(ex) {
 				console.error(ex);
