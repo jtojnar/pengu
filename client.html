@@ -43,13 +43,21 @@
 .penguin .message {
 	display: none;
 	position: absolute;
-	bottom: 3em;
+	bottom: 4em;
 	left: -24px;
 	border-radius: 1em;
 	width: 15em;
 	padding: 1em;
 	background: hsla(215, 20%, 86%, 0.6);
 	border-color: hsla(215, 20%, 86%, 0.5);
+	max-height: 6em;
+	pointer-events: none;
+}
+.penguin .message p {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .penguin .message:before {
 	content: "";
@@ -73,7 +81,7 @@
 <div class="container">
 <div id="view">
 </div>
-<input type="text" id="message" placeholder="Piš zprávu sem!">
+<input type="text" id="message" placeholder="Piš zprávu sem!" maxlength="100">
 </div>
 <script src="zepto.min.js"></script>
 <script src="client.js"></script>

@@ -120,7 +120,7 @@ $(function () {
 	}, 3000);
 
 	function addPlayer(name, room) {
-		players[name] = $('<div data-name="'+name+'" data-room="'+room+'" class="penguin"><p class="message">I am a penguin eating zebra filled with bubblegum</p></div>');
+		players[name] = $('<div data-name="'+name+'" data-room="'+room+'" class="penguin"><div class="message"><p>I am a penguin eating zebra filled with bubblegum</p></div></div>');
 		if(room == myRoom) {
 			showPlayer(name);
 		}
@@ -150,6 +150,6 @@ $(function () {
 		msgTimeouts[name] = setTimeout(function() {
 			players[name].find('.message').hide();
 		}, 5000);
-		players[name].find('.message').show().text(message);
+		players[name].find('.message').show().find('p').text(message);
 	}
 });
