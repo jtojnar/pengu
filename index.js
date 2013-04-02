@@ -140,6 +140,7 @@ wsServer.on('request', function(request) {
 		if(message.type === 'utf8') {
 			try {
 				var json = JSON.parse(message.utf8Data);
+				console.log(json);
 				if(json.type == 'init' && name == null) {
 					name = json.name;
 					connection.sendUTF(JSON.stringify({type: 'sync', name: name, data: players}));
@@ -166,10 +167,8 @@ wsServer.on('request', function(request) {
 						var msg = {type: 'move', name: name, x: players[name][0], y: players[name][1]};
 						if(travel) {
 							msg.travel = travel;
-							msg.newX = rooms[travel].spawn.x;
-							msg.newY = rooms[travel].spawn.y;
-							players[name][0] = rooms[travel].spawn.x;
-							players[name][1] = rooms[travel].spawn.y;
+							players[name][0] = msg.newX = rooms[travel].spawn.x;
+							players[name][1] = msg.newY = rooms[travel].spawn.y;
 						}
 						for(var i=0; i < clients.length; i++) {
 							clients[i].sendUTF(JSON.stringify(msg));

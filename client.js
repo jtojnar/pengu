@@ -58,12 +58,12 @@ $(function () {
 			console.log('This doesn\'t look like a valid JSON: ', message.data);
 			return;
 		}
+		console.log(json);
 		if(json.type === 'sync') {
 			myName = json.name;
 			for(var key in json.data) {
 				if(json.data.hasOwnProperty(key)){
-					addPlayer(key, json.data[key][2]);
-					movePlayer(key, json.data[key][0], json.data[key][1]);
+					addPlayer(key, json.data[key][2], json.data[key][0], json.data[key][1]);
 				}
 			}
 		} else if(json.type === 'enter') {
@@ -73,7 +73,6 @@ $(function () {
 		} else if(json.type === 'move') {
 			if(json.travel) {
 				movePlayer(json.name, json.x, json.y, json.travel, json.newX, json.newY);
-				players[json.name].attr('data-room', json.room);
 			} else {
 				movePlayer(json.name, json.x, json.y);
 			}
@@ -105,7 +104,7 @@ $(function () {
 	function addPlayer(name, room, x, y) {
 		players[name] = $('<div data-name="'+name+'" data-room="'+room+'" class="penguin"><div class="message"><p>I am a penguin eating zebra filled with bubblegum</p></div></div>');
 		if(typeof x !== 'undefined') {
-			players[myName].css({top: y, left: x});
+			changePlayerPosition(name, x, y);
 		}
 		if(room == myRoom) {
 			showPlayer(name);
@@ -119,41 +118,45 @@ $(function () {
 		var left = players[name].css('left').slice(0, -2);
 		var top = players[name].css('top').slice(0, -2);
 		var distance = Math.sqrt(Math.pow(left - x, 2) + Math.pow(top - y, 2));
-		console.log(room);
 
-		var handler = function() {}
-		var travel = false;
+		var handler = function() {};
 		if(typeof room !== 'undefined') {
-			handler = function() {
-				if(room == myRoom) {
-					showPlayer(name);
-				} else {
-					if(name == myName) {
-						view.css('background-image', 'url(' + room + '.png)');
-						myRoom = room;
-						travel = true;
-						players[myName].attr('data-room', myRoom);
-						players[myName].css({top: newY, left: newX});
-						for(var key in players) {
-							if(players.hasOwnProperty(key)){
-								if(players[key].attr('data-room') == myRoom) {
-									showPlayer(key);
-								} else {
-									hidePlayer(key);
-								}
+			players[name].attr('data-room', room);
+			if(name == myName) {
+				handler = function() {
+					view.css('background-image', 'url(' + room + '.png)');
+					myRoom = room;
+					changePlayerPosition(myName, newX, newY);
+					for(var key in players) {
+						if(players.hasOwnProperty(key)){
+							if(players[key].attr('data-room') == myRoom) {
+								showPlayer(key);
+							} else {
+								hidePlayer(key);
 							}
 						}
-					} else {
-						hidePlayer(name);
 					}
+				};
+			} else {
+				if(room == myRoom) {
+					handler = false;
+					changePlayerPosition(name, newX, newY);
+					showPlayer(name);
+				} else {
+					handler = function() {
+						changePlayerPosition(name, newX, newY);
+						hidePlayer(name);
+					};
 				}
 			}
 		}
-		players[name].animate({top: y, left: x}, distance / speed * 1000, 'linear', handler);
+		if(handler !== false) {
+			players[name].animate({top: y, left: x}, distance / speed * 1000, 'linear',  handler);
+		}
 	}
 	function removePlayer(name) {
-		players[name].remove();
 		hidePlayer(name);
+		players.removeItem(name);
 	}
 	function hidePlayer(name) {
 		players[name].remove();
@@ -166,5 +169,8 @@ $(function () {
 			players[name].find('.message').hide();
 		}, 5000);
 		players[name].find('.message').show().find('p').text(message);
+	}
+	function changePlayerPosition(name, x, y) {
+		players[name].css({top: y, left: x});
 	}
 });
