@@ -33,7 +33,7 @@ $(function () {
 	window.WebSocket = window.WebSocket || window.MozWebSocket;
 
 	if(!window.WebSocket) {
-		name.html('Smůla, tvůj prohlížeč nepodporuje WebSockets.');
+		view.html('Smůla, tvůj prohlížeč nepodporuje WebSockets.');
 		return;
 	}
 
