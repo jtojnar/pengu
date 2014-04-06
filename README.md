@@ -1,6 +1,8 @@
 pengu
 =====
 
-Start with `foreman start`.
+**pengu** is lightweight web chat built with HTML5 resembling Club Penguin.
 
-Uses [zepto.js](http://zeptojs.com) for client scripting. Licensed under MIT.
+Can be started with `foreman start`, defaults to port 5000.
+
+Licensed under MIT.
