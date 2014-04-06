@@ -1,6 +1,6 @@
 {
 	"plaza": {
-		"image": "plaza.png",
+		"layers": [{"id": "background", "file": "plaza.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0}],
 		"spawn": {"_class": "Point", "x": 270, "y": 370},
 		"zones": [
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 0, "y": 267}, {"_class": "Point", "x": 248, "y": 225}, {"_class": "Point", "x": 537, "y": 253}, {"_class": "Point", "x": 799, "y": 291}, {"_class": "Point", "x": 799, "y": 599}, {"_class": "Point", "x": 0, "y": 599}]}, "floor"],
@@ -13,17 +13,23 @@
 		]
 	},
 	"bar": {
-		"image": "bar.png",
+		"layers": [
+			{"id": "background", "file": "bar.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0},
+			{"id": "bar", "file": "bar.bar.png", "width": 800, "height": 600, "x": 0, "y": 0},
+			{"id": "door.closed", "file": "bar.door.closed.png", "width": 800, "height": 600, "x": 0, "y": 0},
+			{"id": "door.open", "file": "bar.door.open.png", "width": 800, "height": 600, "x": 0, "y": 0, "alternate": "door.closed"}
+		],
 		"spawn": {"_class": "Point", "x": 450, "y": 330},
 		"zones": [
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 153, "y": 291}, {"_class": "Point", "x": 0, "y": 571}, {"_class": "Point", "x": 0, "y": 599}, {"_class": "Point", "x": 799, "y": 599}, {"_class": "Point", "x": 799, "y": 331}]}, "floor"],
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 407, "y": 298}, {"_class": "Point", "x": 398, "y": 332}, {"_class": "Point", "x": 535, "y": 346}, {"_class": "Point", "x": 536, "y": 305}]}, "door", "plaza"],
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 594, "y": 315}, {"_class": "Point", "x": 596, "y": 348}, {"_class": "Point", "x": 698, "y": 348}, {"_class": "Point", "x": 689, "y": 312}]}, "sound", "piano"],
-			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 154, "y": 505}, {"_class": "Point", "x": 295, "y": 509}, {"_class": "Point", "x": 400, "y": 306}, {"_class": "Point", "x": 255, "y": 296}]}, "obstacle", "bar"]
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 146, "y": 523}, {"_class": "Point", "x": 279, "y": 534}, {"_class": "Point", "x": 382, "y": 285}, {"_class": "Point", "x": 273, "y": 281}]}, "obstacle", "bar"],
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 410, "y": 128}, {"_class": "Point", "x": 532, "y": 121}, {"_class": "Point", "x": 526, "y": 301}, {"_class": "Point", "x": 408, "y": 295}]}, "animate", {"_class": "AlternateLayerAnimation", "off": "door.closed", "on": "door.open"}]
 		]
 	},
 	"chom": {
-		"image": "chom.png",
+		"layers": [{"id": "background", "file": "chom.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0}],
 		"spawn": {"_class": "Point", "x": 360, "y": 540},
 		"zones": [
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 0, "y": 470}, {"_class": "Point", "x": 256, "y": 471}, {"_class": "Point", "x": 296, "y": 521}, {"_class": "Point", "x": 426, "y": 527}, {"_class": "Point", "x": 391, "y": 476}, {"_class": "Point", "x": 799, "y": 469}, {"_class": "Point", "x": 799, "y": 599}, {"_class": "Point", "x": 0, "y": 599}]}, "floor"],

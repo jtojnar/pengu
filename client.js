@@ -11,21 +11,23 @@ function getParameterByName(name) {
 	}
 }
 
-Object.prototype.removeItem = function (key) {
-	if(!this.hasOwnProperty(key)){
+function removeItemNamed(object, key) {
+	if(!object.hasOwnProperty(key)){
 		return;
 	}
-	if(isNaN(parseInt(key)) || !(this instanceof Array)) {
-		delete this[key];
+	if(isNaN(parseInt(key)) || !(object instanceof Array)) {
+		delete object[key];
 	} else {
-		this.splice(key, 1);
+		object.splice(key, 1);
 	}
 };
 
 $(function () {
 	var view = $('#view');
+	var map = null;
 	var myName = null;
 	var myRoom = 'plaza';
+	var myLayers = [];
 	var speed = 150; // px per sec
 	var players = {};
 	var msgTimeouts = {};
@@ -41,6 +43,10 @@ $(function () {
 
 	connection.onopen = function () {
 		connection.send(JSON.stringify({type: 'init', name: getParameterByName('u')}));
+		$.getJSON('/world/map.json', function(data){
+			map = data;
+			loadRoom();
+		});
 	};
 
 	connection.onerror = function (error) {
@@ -124,8 +130,8 @@ $(function () {
 			players[name].attr('data-room', room);
 			if(name == myName) {
 				handler = function() {
-					view.css('background-image', 'url(world/' + room + '.png)');
 					myRoom = room;
+					loadRoom();
 					changePlayerPosition(myName, newX, newY);
 					for(var key in players) {
 						if(players.hasOwnProperty(key)){
@@ -156,7 +162,7 @@ $(function () {
 	}
 	function removePlayer(name) {
 		hidePlayer(name);
-		players.removeItem(name);
+		removeItemNamed(players, name);
 	}
 	function hidePlayer(name) {
 		players[name].remove();
@@ -172,5 +178,30 @@ $(function () {
 	}
 	function changePlayerPosition(name, x, y) {
 		players[name].css({top: y, left: x});
+	}
+
+	function loadRoom() {
+		for(var layer in myLayers) {
+			myLayers[layer].remove();
+		}
+		myLayers = [];
+		for(var layerdata in map[myRoom].layers) {
+			var layerdata = map[myRoom].layers[layerdata];
+			var layer = $('<div class="layer"></div>');
+			layer.css({
+				'position': 'absolute',
+				'background-image': 'url(/world/' + layerdata.file + ')',
+				'width': layerdata.width,
+				'height': layerdata.height,
+				'left': layerdata.x,
+				'top': layerdata.y,
+				'z-index': typeof layerdata.z !== 'undefined' ? layerdata.z : 200
+			});
+			if(layerdata.alternate) {
+				layer.hide();
+			}
+			myLayers.push(layer);
+			view.append(layer);
+		}
 	}
 });
