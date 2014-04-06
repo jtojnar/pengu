@@ -115,8 +115,8 @@ $(function () {
 	}
 	function movePlayer(name, x, y, room, newX, newY) {
 		// if(16 <= x && x <= view.width() - 16 && 16 <= y && y <= view.height() - 16)
-		var left = players[name].css('left').slice(0, -2);
-		var top = players[name].css('top').slice(0, -2);
+		var left = players[name].position().left;
+		var top = players[name].position().top;
 		var distance = Math.sqrt(Math.pow(left - x, 2) + Math.pow(top - y, 2));
 
 		var handler = function() {};
