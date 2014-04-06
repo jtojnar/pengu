@@ -29,13 +29,13 @@ Array.prototype.pushArray = function(arr) {
 
 var app = express();
 
-app.configure(function(){
-	app.set('port', process.env.PORT || 8080);
-	app.use(express.static(__dirname));
-});
-app.configure('development', function(){
-	app.use(express.logger());
-});
+app.set('port', process.env.PORT || 8080);
+app.use(require('serve-static')(__dirname));
+
+var env = process.env.NODE_ENV || 'development';
+if(env == 'development') {
+	app.use(require('morgan')());
+}
 
 
 app.get('/', function(req, res){
