@@ -1,7 +1,7 @@
 {
 	"name": "pengu",
-	"description": "simple html5 club penguin client-server",
-	"version": "0.0.1-20",
+	"description": "simple html5 chat resembling club penguin",
+	"version": "0.0.1-22",
 	"private": true,
 	"dependencies": {
 		"express": "4.x",
