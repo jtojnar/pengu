@@ -88,41 +88,17 @@ function getTarget(room, line) {
 
 var clients = [];
 var players = {};
-var rooms = {
-	plaza: {
-		image: 'plaza.png',
-		spawn: new Point(270, 370),
-		zones: [
-			[new Polygon(new Point(0,267), new Point(248,225), new Point(537,253), new Point(799,291), new Point(799,599), new Point(0,599)), 'floor'],
-			[new Polygon(new Point(120,314), new Point(119,329), new Point(186,334), new Point(188,316)), 'door', 'bar'],
-			[new Polygon(new Point(358,327), new Point(354,342), new Point(425,345), new Point(426,328)), 'door', 'chom'],
-			[new Polygon(new Point(243,526), new Point(263,487), new Point(341,457), new Point(395,465), new Point(441,501), new Point(428,551), new Point(311,579), new Point(264,562)), 'obstacle'], //fountain
-			[new Polygon(new Point(84,255), new Point(77,318), new Point(225,319), new Point(235,228)), 'obstacle'], //house1
-			[new Polygon(new Point(313,232), new Point(296,329), new Point(454,337), new Point(468,247)), 'obstacle'], //house2
-			[new Polygon(new Point(549,254), new Point(492,306), new Point(489,344), new Point(534,332), new Point(592,292), new Point(608,363), new Point(635,372), new Point(659,334), new Point(711,391), new Point(740,393), new Point(774,386), new Point(733,310), new Point(737,284)), 'obstacle'], //blob
-		],
-	},
-	bar: {
-		image: 'bar.png',
-		spawn: new Point(450, 330),
-		zones: [
-			[new Polygon(new Point(153,291), new Point(0,571), new Point(0,599), new Point(799,599), new Point(799,331)), 'floor'],
-			[new Polygon(new Point(407,298), new Point(398,332), new Point(535,346), new Point(536,305)), 'door', 'plaza'],
-			[new Polygon(new Point(594,315), new Point(596,348), new Point(698,348), new Point(689,312)), 'sound', 'piano'],
-			[new Polygon(new Point(154,505), new Point(295,509), new Point(400,306), new Point(255,296)), 'obstacle'], //bar
-		]
-	},
-	chom: {
-		image: 'chom.png',
-		spawn: new Point(360, 540),
-		zones: [
-			[new Polygon(new Point(0,470), new Point(256,471), new Point(296,521), new Point(426,527), new Point(391,476), new Point(799,469), new Point(799,599), new Point(0,599)), 'floor'],
-			[new Polygon(new Point(298,508), new Point(292,543), new Point(441,555), new Point(438,512)), 'door', 'plaza'],
-			[new Polygon(new Point(550,539), new Point(563,504), new Point(691,492), new Point(712,524)), 'obstacle'], //blue
-			[new Polygon(new Point(70,508), new Point(179,511), new Point(196,543), new Point(48,546)), 'obstacle'], //pink
-		]
-	}
-}
+var rooms = JSON.parse(require('fs').readFileSync(__dirname + '/world/map.json', 'utf8'), function (key, value) {
+    var type;
+    if(value && typeof value === 'object') {
+        type = value._class;
+        if (typeof type === 'string' && typeof poly[type] === 'function') {
+            return new (poly[type])(value);
+        }
+    }
+    return value;
+});
+
 
 wsServer.on('request', function(request) {
 	if (!originIsAllowed(request.origin)) {

@@ -1,0 +1,35 @@
+{
+	"plaza": {
+		"image": "plaza.png",
+		"spawn": {"_class": "Point", "x": 270, "y": 370},
+		"zones": [
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 0, "y": 267}, {"_class": "Point", "x": 248, "y": 225}, {"_class": "Point", "x": 537, "y": 253}, {"_class": "Point", "x": 799, "y": 291}, {"_class": "Point", "x": 799, "y": 599}, {"_class": "Point", "x": 0, "y": 599}]}, "floor"],
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 120, "y": 314}, {"_class": "Point", "x": 119, "y": 329}, {"_class": "Point", "x": 186, "y": 334}, {"_class": "Point", "x": 188, "y": 316}]}, "door", "bar"],
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 358, "y": 327}, {"_class": "Point", "x": 354, "y": 342}, {"_class": "Point", "x": 425, "y": 345}, {"_class": "Point", "x": 426, "y": 328}]}, "door", "chom"],
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 243, "y": 526}, {"_class": "Point", "x": 263, "y": 487}, {"_class": "Point", "x": 341, "y": 457}, {"_class": "Point", "x": 395, "y": 465}, {"_class": "Point", "x": 441, "y": 501}, {"_class": "Point", "x": 428, "y": 551}, {"_class": "Point", "x": 311, "y": 579}, {"_class": "Point", "x": 264, "y": 562}]}, "obstacle", "fountain"],
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 84, "y": 255}, {"_class": "Point", "x": 77, "y": 318}, {"_class": "Point", "x": 225, "y": 319}, {"_class": "Point", "x": 235, "y": 228}]}, "obstacle", "house1"],
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 313, "y": 232}, {"_class": "Point", "x": 296, "y": 329}, {"_class": "Point", "x": 454, "y": 337}, {"_class": "Point", "x": 468, "y": 247}]}, "obstacle", "house2"],
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 549, "y": 254}, {"_class": "Point", "x": 492, "y": 306}, {"_class": "Point", "x": 489, "y": 344}, {"_class": "Point", "x": 534, "y": 332}, {"_class": "Point", "x": 592, "y": 292}, {"_class": "Point", "x": 608, "y": 363}, {"_class": "Point", "x": 635, "y": 372}, {"_class": "Point", "x": 659, "y": 334}, {"_class": "Point", "x": 711, "y": 391}, {"_class": "Point", "x": 740, "y": 393}, {"_class": "Point", "x": 774, "y": 386}, {"_class": "Point", "x": 733, "y": 310}, {"_class": "Point", "x": 737, "y": 284}]}, "obstacle", "blob"]
+		]
+	},
+	"bar": {
+		"image": "bar.png",
+		"spawn": {"_class": "Point", "x": 450, "y": 330},
+		"zones": [
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 153, "y": 291}, {"_class": "Point", "x": 0, "y": 571}, {"_class": "Point", "x": 0, "y": 599}, {"_class": "Point", "x": 799, "y": 599}, {"_class": "Point", "x": 799, "y": 331}]}, "floor"],
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 407, "y": 298}, {"_class": "Point", "x": 398, "y": 332}, {"_class": "Point", "x": 535, "y": 346}, {"_class": "Point", "x": 536, "y": 305}]}, "door", "plaza"],
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 594, "y": 315}, {"_class": "Point", "x": 596, "y": 348}, {"_class": "Point", "x": 698, "y": 348}, {"_class": "Point", "x": 689, "y": 312}]}, "sound", "piano"],
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 154, "y": 505}, {"_class": "Point", "x": 295, "y": 509}, {"_class": "Point", "x": 400, "y": 306}, {"_class": "Point", "x": 255, "y": 296}]}, "obstacle", "bar"]
+		]
+	},
+	"chom": {
+		"image": "chom.png",
+		"spawn": {"_class": "Point", "x": 360, "y": 540},
+		"zones": [
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 0, "y": 470}, {"_class": "Point", "x": 256, "y": 471}, {"_class": "Point", "x": 296, "y": 521}, {"_class": "Point", "x": 426, "y": 527}, {"_class": "Point", "x": 391, "y": 476}, {"_class": "Point", "x": 799, "y": 469}, {"_class": "Point", "x": 799, "y": 599}, {"_class": "Point", "x": 0, "y": 599}]}, "floor"],
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 298, "y": 508}, {"_class": "Point", "x": 292, "y": 543}, {"_class": "Point", "x": 441, "y": 555}, {"_class": "Point", "x": 438, "y": 512}]}, "door", "plaza"],
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 550, "y": 539}, {"_class": "Point", "x": 563, "y": 504}, {"_class": "Point", "x": 691, "y": 492}, {"_class": "Point", "x": 712, "y": 524}]}, "obstacle", "blue"],
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 70, "y": 508}, {"_class": "Point", "x": 179, "y": 511}, {"_class": "Point", "x": 196, "y": 543}, {"_class": "Point", "x": 48, "y": 546}]}, "obstacle", "pink"]
+		]
+	}
+}

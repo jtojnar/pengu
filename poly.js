@@ -1,6 +1,14 @@
 "use strict";
 function Polygon() {
-	this.points = arguments;
+	if(arguments.length == 1 && arguments[0]._class == 'Polygon') {
+		this.points = arguments[0].points;
+	} else {
+		this.points = arguments;
+	}
+	if(this.points.length < 3) {
+		throw new Error('Polygon requires at least 3 points');
+	}
+	return this;
 }
 Polygon.prototype.containsPoint = function(point) {
 	if(!point instanceof Point) {
@@ -65,11 +73,16 @@ Line.prototype.getIntersection = function(line2) {
 }
 
 function Point() {
-	if(arguments.length != 2 || typeof arguments[0] !== 'number' || typeof arguments[1] !== 'number') {
-		throw new Error('Invalid point definition');
+	if(arguments.length == 1 && arguments[0]._class == 'Point') {
+		this.x = arguments[0].x;
+		this.y = arguments[0].y;
+		return this;
+	} else if(arguments.length == 2 && typeof arguments[0] == 'number' && typeof arguments[1] == 'number') {
+		this.x = arguments[0];
+		this.y = arguments[1];
+		return this;
 	}
-	this.x = arguments[0];
-	this.y = arguments[1];
+	throw new Error('Invalid point definition');
 }
 Point.prototype.toString = function() {
 	return '[' + this.x + ',' + this.y + ']';

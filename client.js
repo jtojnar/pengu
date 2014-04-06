@@ -124,7 +124,7 @@ $(function () {
 			players[name].attr('data-room', room);
 			if(name == myName) {
 				handler = function() {
-					view.css('background-image', 'url(' + room + '.png)');
+					view.css('background-image', 'url(world/' + room + '.png)');
 					myRoom = room;
 					changePlayerPosition(myName, newX, newY);
 					for(var key in players) {
