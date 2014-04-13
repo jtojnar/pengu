@@ -30,7 +30,9 @@ Array.prototype.pushArray = function(arr) {
 var app = express();
 
 app.set('port', process.env.PORT || 8080);
-app.use(require('serve-static')(__dirname));
+var serveStatic = require('serve-static');
+app.use('/content', serveStatic(__dirname + '/content'));
+app.use('/client', serveStatic(__dirname + '/client'));
 
 var env = process.env.NODE_ENV || 'development';
 if(env == 'development') {
@@ -39,7 +41,7 @@ if(env == 'development') {
 
 
 app.get('/', function(req, res){
-	res.send('<script>window.location.href = "/client.html?u=" + encodeURIComponent(prompt("Zadej jmeno"));</script>');
+	res.send('<script>window.location.href = "/client/client.html?u=" + encodeURIComponent(prompt("Zadej jmeno"));</script>');
 });
 
 var server = http.createServer(app).listen(app.get('port'));
@@ -88,7 +90,7 @@ function getTarget(room, line) {
 
 var clients = [];
 var players = {};
-var rooms = JSON.parse(require('fs').readFileSync(__dirname + '/world/map.json', 'utf8'), function (key, value) {
+var rooms = JSON.parse(require('fs').readFileSync(__dirname + '/content/world/map.json', 'utf8'), function (key, value) {
     var type;
     if(value && typeof value === 'object') {
         type = value._class;

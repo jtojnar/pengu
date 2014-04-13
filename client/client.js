@@ -45,7 +45,7 @@ $(function () {
 
 	connection.onopen = function () {
 		connection.send(JSON.stringify({type: 'init', name: getParameterByName('u')}));
-		$.getJSON('/world/map.json', function(data){
+		$.getJSON('/content/world/map.json', function(data){
 			map = data;
 			loadRoom();
 		});
@@ -185,7 +185,7 @@ $(function () {
 	function loadRoom() {
 		audio.get(0).pause();
 		if(typeof map[myRoom].ambiance !== 'undefined') {
-			audio.attr('src', '/world/' + map[myRoom].ambiance);
+			audio.attr('src', '/content/world/' + map[myRoom].ambiance);
 			audio.get(0).play();
 		}
 		for(var layer in myLayers) {
@@ -197,7 +197,7 @@ $(function () {
 			var layer = $('<div class="layer"></div>');
 			layer.css({
 				'position': 'absolute',
-				'background-image': 'url(/world/' + layerdata.file + ')',
+				'background-image': 'url(/content/world/' + layerdata.file + ')',
 				'width': layerdata.width,
 				'height': layerdata.height,
 				'left': layerdata.x,
