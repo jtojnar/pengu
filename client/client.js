@@ -73,7 +73,7 @@ $(function () {
 			myName = json.name;
 			for(var key in json.data) {
 				if(json.data.hasOwnProperty(key)){
-					addPlayer(key, json.data[key][2], json.data[key][0], json.data[key][1]);
+					addPlayer(key, json.data[key].room, json.data[key].x, json.data[key].y);
 				}
 			}
 		} else if(json.type === 'enter') {
