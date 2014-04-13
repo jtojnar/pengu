@@ -24,6 +24,8 @@ function removeItemNamed(object, key) {
 
 $(function () {
 	var view = $('#view');
+	var overlay = $('<div id="overlay"><div><div class="progress"><div>Načítání…</div></div></div></div>');
+	view.parent().append(overlay);
 	var map = null;
 	var myName = null;
 	var myRoom = 'plaza';
@@ -183,6 +185,8 @@ $(function () {
 	}
 
 	function loadRoom() {
+		var promises = [];
+		overlay.show();
 		audio.get(0).pause();
 		if(typeof map[myRoom].ambiance !== 'undefined') {
 			audio.attr('src', '/content/world/' + map[myRoom].ambiance);
@@ -194,21 +198,30 @@ $(function () {
 		myLayers = [];
 		for(var layerdata in map[myRoom].layers) {
 			var layerdata = map[myRoom].layers[layerdata];
-			var layer = $('<div class="layer"></div>');
+			var layer = $('<img class="layer">');
 			layer.css({
-				'position': 'absolute',
-				'background-image': 'url(/content/world/' + layerdata.file + ')',
 				'width': layerdata.width,
 				'height': layerdata.height,
 				'left': layerdata.x,
 				'top': layerdata.y,
 				'z-index': typeof layerdata.z !== 'undefined' ? layerdata.z : 200
 			});
+
+			var p = $.Deferred();
+			layer.on('load', p.resolve);
+			layer.on('error', p.resolve);
+			promises.push(p);
+
+			layer.attr('src', '/content/world/' + layerdata.file);
+
 			if(layerdata.alternate) {
 				layer.hide();
 			}
 			myLayers.push(layer);
 			view.append(layer);
 		}
+		$.when.apply($, promises).then(function() {
+			overlay.hide();
+		});
 	}
 });
