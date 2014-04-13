@@ -30,6 +30,7 @@
 	},
 	"chom": {
 		"layers": [{"id": "background", "file": "chom.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0}],
+		"ambiance": "bedtime.mp3",
 		"spawn": {"_class": "Point", "x": 360, "y": 540},
 		"zones": [
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 0, "y": 470}, {"_class": "Point", "x": 256, "y": 471}, {"_class": "Point", "x": 296, "y": 521}, {"_class": "Point", "x": 426, "y": 527}, {"_class": "Point", "x": 391, "y": 476}, {"_class": "Point", "x": 799, "y": 469}, {"_class": "Point", "x": 799, "y": 599}, {"_class": "Point", "x": 0, "y": 599}]}, "floor"],

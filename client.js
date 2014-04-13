@@ -27,6 +27,8 @@ $(function () {
 	var map = null;
 	var myName = null;
 	var myRoom = 'plaza';
+	var audio = $('<audio loop="loop"></audio>');
+	view.append(audio);
 	var myLayers = [];
 	var speed = 150; // px per sec
 	var players = {};
@@ -181,6 +183,11 @@ $(function () {
 	}
 
 	function loadRoom() {
+		audio.get(0).pause();
+		if(typeof map[myRoom].ambiance !== 'undefined') {
+			audio.attr('src', '/world/' + map[myRoom].ambiance);
+			audio.get(0).play();
+		}
 		for(var layer in myLayers) {
 			myLayers[layer].remove();
 		}
