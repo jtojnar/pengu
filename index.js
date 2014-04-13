@@ -91,14 +91,14 @@ function getTarget(room, line) {
 var clients = [];
 var players = {};
 var rooms = JSON.parse(require('fs').readFileSync(__dirname + '/content/world/map.json', 'utf8'), function (key, value) {
-    var type;
-    if(value && typeof value === 'object') {
-        type = value._class;
-        if (typeof type === 'string' && typeof poly[type] === 'function') {
-            return new (poly[type])(value);
-        }
-    }
-    return value;
+	var type;
+	if(value && typeof value === 'object') {
+		type = value._class;
+		if (typeof type === 'string' && typeof poly[type] === 'function') {
+			return new (poly[type])(value);
+		}
+	}
+	return value;
 });
 
 
@@ -110,54 +110,53 @@ wsServer.on('request', function(request) {
 	}
 
 	var connection = request.accept(null, request.origin);
-	var index = clients.push(connection) - 1;
+	clients.push(connection);
 	console.log((new Date()) + ' Connection accepted.');
-	var name = null;
-	var room = 'plaza';
 	connection.on('message', function(message) {
 		if(message.type === 'utf8') {
 			try {
 				var json = JSON.parse(message.utf8Data);
 				console.log(json);
-				if(json.type == 'init' && name == null) {
-					name = json.name;
-					connection.sendUTF(JSON.stringify({type: 'sync', name: name, data: players}));
-					players[name] = {x: 550, y: 500, room: 'plaza', clothing: []};
-					console.info('Initial handshake with ' + name);
+				if(json.type == 'init' && connection.name == null) {
+					connection.name = json.name;
+					connection.sendUTF(JSON.stringify({type: 'sync', name: connection.name, data: players}));
+					players[connection.name] = {x: 550, y: 500, room: 'plaza', clothing: []};
+					console.info('Initial handshake with ' + connection.name);
 					for(var i=0; i < clients.length; i++) {
-						clients[i].sendUTF(JSON.stringify({type: 'enter', name: name, room: players[name].room, x: players[name].x, y: players[name].y, clothing: players[name].clothing}));
+						clients[i].sendUTF(JSON.stringify({type: 'enter', name: connection.name, room: players[connection.name].room, x: players[connection.name].x, y: players[connection.name].y, clothing: players[connection.name].clothing}));
 					}
 				} else if(json.type == 'move') {
 					var travel = false;
-					var target = getTarget(rooms[room], new Line(new Point(players[name].x, players[name].y), new Point(json.x, json.y)));
+					var room = players[connection.name].room;
+					var target = getTarget(rooms[room], new Line(new Point(players[connection.name].x, players[connection.name].y), new Point(json.x, json.y)));
 					if(rooms[room].zones[0][0].containsPoint(target)) {
-						console.log('Moving ' + name + ' to ' + target);
-						players[name].x = target.x;
-						players[name].y = target.y;
-						players[name].room = players[name].room;
+						console.log('Moving ' + connection.name + ' to ' + target);
+						players[connection.name].x = target.x;
+						players[connection.name].y = target.y;
+						players[connection.name].room = players[connection.name].room;
 						for(var i=0; i< rooms[room].zones.length; i++) {
 							var zone = rooms[room].zones[i];
 							if(zone[1] == 'door' && zone[0].containsPoint(target)) {
 								room = travel = zone[2];
-								console.log(name + ' goes to ' + travel);
-								players[name].room = travel;
+								console.log(connection.name + ' goes to ' + travel);
+								players[connection.name].room = travel;
 								break;
 							}
 						}
-						var msg = {type: 'move', name: name, x: players[name].x, y: players[name].y};
+						var msg = {type: 'move', name: connection.name, x: players[connection.name].x, y: players[connection.name].y};
 						if(travel) {
 							msg.travel = travel;
-							players[name].x = msg.newX = rooms[travel].spawn.x;
-							players[name].y = msg.newY = rooms[travel].spawn.y;
+							players[connection.name].x = msg.newX = rooms[travel].spawn.x;
+							players[connection.name].y = msg.newY = rooms[travel].spawn.y;
 						}
 						for(var i=0; i < clients.length; i++) {
 							clients[i].sendUTF(JSON.stringify(msg));
 						}
 					}
 				} else if(json.type == 'message') {
-					console.log(name + ' said ' + json.text);
+					console.log(connection.name + ' said ' + json.text);
 					for(var i=0; i < clients.length; i++) {
-						clients[i].sendUTF(JSON.stringify({type: 'say', name: name, text: json.text}));
+						clients[i].sendUTF(JSON.stringify({type: 'say', name: connection.name, text: json.text}));
 					}
 				}
 			} catch(ex) {
@@ -167,11 +166,15 @@ wsServer.on('request', function(request) {
 		}
 	});
 	connection.on('close', function(reasonCode, description) {
-		clients.removeItem(index);
-		players.removeItem(name);
-		console.log((new Date()) + ' Peer ' + connection.remoteAddress + '(' + name + ') disconnected.');
+		var index = clients.indexOf(connection);
+		if(index !== -1) {
+			// remove the connection from the pool
+			clients.splice(index, 1);
+		}
+		players.removeItem(connection.name);
+		console.log((new Date()) + ' Peer ' + connection.remoteAddress + '(' + connection.name + ') disconnected.');
 		for(var i=0; i < clients.length; i++) {
-			clients[i].sendUTF(JSON.stringify({type: 'exit', name: name}));
+			clients[i].sendUTF(JSON.stringify({type: 'exit', name: connection.name}));
 		}
 	});
 });
