@@ -118,45 +118,47 @@ wsServer.on('request', function(request) {
 				var json = JSON.parse(message.utf8Data);
 				console.log(json);
 				if(json.type == 'init' && connection.name == null) {
-					connection.name = json.name;
-					connection.sendUTF(JSON.stringify({type: 'sync', name: connection.name, data: players}));
-					players[connection.name] = {x: 550, y: 500, room: 'plaza', clothing: []};
-					console.info('Initial handshake with ' + connection.name);
+					var name = connection.name = json.name;
+					connection.sendUTF(JSON.stringify({type: 'sync', name: name, data: players}));
+					players[name] = {x: 550, y: 500, room: 'plaza', clothing: []};
+					console.info('Initial handshake with ' + name);
 					for(var i=0; i < clients.length; i++) {
-						clients[i].sendUTF(JSON.stringify({type: 'enter', name: connection.name, room: players[connection.name].room, x: players[connection.name].x, y: players[connection.name].y, clothing: players[connection.name].clothing}));
+						clients[i].sendUTF(JSON.stringify({type: 'enter', name: name, room: players[name].room, x: players[name].x, y: players[name].y, clothing: players[name].clothing}));
 					}
 				} else if(json.type == 'move') {
 					var travel = false;
-					var room = players[connection.name].room;
-					var target = getTarget(rooms[room], new Line(new Point(players[connection.name].x, players[connection.name].y), new Point(json.x, json.y)));
+					var name = connection.name;
+					var room = players[name].room;
+					var target = getTarget(rooms[room], new Line(new Point(players[name].x, players[name].y), new Point(json.x, json.y)));
 					if(rooms[room].zones[0][0].containsPoint(target)) {
-						console.log('Moving ' + connection.name + ' to ' + target);
-						players[connection.name].x = target.x;
-						players[connection.name].y = target.y;
-						players[connection.name].room = players[connection.name].room;
+						console.log('Moving ' + name + ' to ' + target);
+						players[name].x = target.x;
+						players[name].y = target.y;
+						players[name].room = players[name].room;
 						for(var i=0; i< rooms[room].zones.length; i++) {
 							var zone = rooms[room].zones[i];
 							if(zone[1] == 'door' && zone[0].containsPoint(target)) {
 								room = travel = zone[2];
-								console.log(connection.name + ' goes to ' + travel);
-								players[connection.name].room = travel;
+								console.log(name + ' goes to ' + travel);
+								players[name].room = travel;
 								break;
 							}
 						}
-						var msg = {type: 'move', name: connection.name, x: players[connection.name].x, y: players[connection.name].y};
+						var msg = {type: 'move', name: name, x: players[name].x, y: players[name].y};
 						if(travel) {
 							msg.travel = travel;
-							players[connection.name].x = msg.newX = rooms[travel].spawn.x;
-							players[connection.name].y = msg.newY = rooms[travel].spawn.y;
+							players[name].x = msg.newX = rooms[travel].spawn.x;
+							players[name].y = msg.newY = rooms[travel].spawn.y;
 						}
 						for(var i=0; i < clients.length; i++) {
 							clients[i].sendUTF(JSON.stringify(msg));
 						}
 					}
 				} else if(json.type == 'message') {
-					console.log(connection.name + ' said ' + json.text);
+					var name = connection.name;
+					console.log(name + ' said ' + json.text);
 					for(var i=0; i < clients.length; i++) {
-						clients[i].sendUTF(JSON.stringify({type: 'say', name: connection.name, text: json.text}));
+						clients[i].sendUTF(JSON.stringify({type: 'say', name: name, text: json.text}));
 					}
 				}
 			} catch(ex) {
