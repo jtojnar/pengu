@@ -31,6 +31,9 @@ $(function () {
 	var myRoom = 'plaza';
 	var audio = $('<audio loop="loop"></audio>');
 	view.append(audio);
+	var canvas = $('<canvas width="800" height="600"></canvas>');
+	var ctx = canvas.get(0).getContext('2d');
+	view.append(canvas);
 	var myLayers = [];
 	var speed = 150; // px per sec
 	var players = {};
@@ -220,6 +223,24 @@ $(function () {
 			myLayers.push(layer);
 			view.append(layer);
 		}
+
+		if(getParameterByName('debug') == 1) {
+			ctx.lineWidth = 3;
+			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+			for(var zonedata in map[myRoom].zones) {
+				var zonedata = map[myRoom].zones[zonedata];
+				ctx.beginPath();
+				ctx.strokeStyle = {floor: '#a6d924', door: '#a924d9', obstacle: '#d92463', sound: '#0075ff', animate: '#ffd200'}[zonedata[1]];
+				ctx.moveTo(zonedata[0].points[0].x, zonedata[0].points[0].y);
+				for(var i = 0; i < zonedata[0].points.length; i++) {
+					ctx.lineTo(zonedata[0].points[i].x, zonedata[0].points[i].y);
+				}
+				ctx.lineTo(zonedata[0].points[0].x, zonedata[0].points[0].y);
+				ctx.stroke();
+				ctx.closePath();
+			}
+		}
+
 		$.when.apply($, promises).then(function() {
 			overlay.hide();
 		});

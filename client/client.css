@@ -156,3 +156,11 @@
 	transform: rotate(-135deg);
 	background: #bbb;
 }
+
+canvas {
+	z-index: 1999999;
+	pointer-events: none;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
