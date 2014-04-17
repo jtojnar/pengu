@@ -22,11 +22,21 @@ function removeItemNamed(object, key) {
 	}
 };
 
+function findById(arr, id) {
+	for(var i = 0; i < arr.length; i++) {
+		if(arr[i].id === id) {
+			return arr[i];
+		}
+	}
+	return false;
+}
+
 $(function () {
 	var view = $('#view');
 	var overlay = $('<div id="overlay"><div><div class="progress"><div>Načítání…</div></div></div></div>');
 	view.parent().append(overlay);
 	var map = null;
+	var items = null;
 	var myName = null;
 	var myRoom = 'plaza';
 	var audio = $('<audio loop="loop"></audio>');
@@ -47,12 +57,20 @@ $(function () {
 	}
 
 	var connection = new WebSocket('ws://'+window.location.hostname + (window.location.port == '' ? '' : ':' + window.location.port));
+	var itemsLoaded = new $.Deferred();
 
 	connection.onopen = function () {
 		connection.send(JSON.stringify({type: 'init', name: getParameterByName('u')}));
-		$.getJSON('/content/world/map.json', function(data){
+		var mapLoaded = $.getJSON('/content/world/map.json').done(function(data){
 			map = data;
+		});
+		$.getJSON('/content/items/items.json').done(function(data){
+			items = data;
+		}).done(itemsLoaded.resolve);
+		$.when(mapLoaded, itemsLoaded).done(function() {
 			loadRoom();
+		}).fail(function() {
+			alert('Načítání selhalo. Zkus prosím obnovit stránku.')
 		});
 	};
 
@@ -77,10 +95,16 @@ $(function () {
 			for(var key in json.data) {
 				if(json.data.hasOwnProperty(key)){
 					addPlayer(key, json.data[key].room, json.data[key].x, json.data[key].y);
+					itemsLoaded.done(function() {
+						dressPlayer(key, json.data[key].clothing);
+					});
 				}
 			}
 		} else if(json.type === 'enter') {
 			addPlayer(json.name, json.room, json.x, json.y);
+			itemsLoaded.done(function() {
+				dressPlayer(json.name, json.clothing);
+			});
 		} else if(json.type === 'exit') {
 			removePlayer(json.name);
 		} else if(json.type === 'move') {
@@ -185,6 +209,14 @@ $(function () {
 	}
 	function changePlayerPosition(name, x, y) {
 		players[name].css({top: y, left: x});
+	}
+	function dressPlayer(name, clothing) {
+		players[name].remove('img.clothing');
+		console.log(clothing);
+		for(var i = 0; i < clothing.length; i++) {
+			console.log(findById(items, clothing[i]).file);
+			players[name].append($('<img src="/content/items/' + findById(items, clothing[i]).file + '" class="clothing">'));
+		}
 	}
 
 	function loadRoom() {

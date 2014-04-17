@@ -26,6 +26,10 @@
 	left: 50%;
 	background: transparent url(/content/penguin/black-small.png) no-repeat;
 }
+.penguin img {
+	bottom: 0;
+	position: absolute;
+}
 .penguin:before {
 	content: attr(data-name);
 	width: 5em;

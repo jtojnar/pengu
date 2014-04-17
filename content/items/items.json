@@ -1,0 +1,24 @@
+[
+	
+	{
+		"id": 1,
+		"title": "Beta čapka FCP",
+		"type": "head",
+		"tags": ["beta", "party", "hat", "čapka", "fan-club-penguin", "fcp", "blue", "head", "modrá", "hlava"],
+		"file": "hat-small.png"
+	},
+	{
+		"id": 2,
+		"title": "Octagram T",
+		"type": "chest",
+		"tags": ["octagram", "t-shirt", "green", "shirt", "osmicípá", "hvězda", "zelené", "tričko", "triko"],
+		"file": "octagram-t-small.png"
+	},
+	{
+		"id": 3,
+		"title": "Kus dortu",
+		"type": "hand",
+		"tags": ["cake", "slice of cake", "kus dortu", "dort", "beta"],
+		"file": "cake-piece-small.png"
+	}
+]
