@@ -44,6 +44,18 @@ $(function () {
 	var canvas = $('<canvas width="800" height="600"></canvas>');
 	var ctx = canvas.get(0).getContext('2d');
 	view.append(canvas);
+
+	$('#toggleMusic').click(function toggleMusic(e) {
+		audio.get(0).muted = !audio.get(0).muted;
+		if(audio.get(0).muted) {
+			$(this).find('img').attr('src', '/client/unmute-button.png');
+		} else {
+			$(this).find('img').attr('src', '/client/mute-button.png');
+		}
+		e.preventDefault();
+		e.stopPropagation();
+	});
+
 	var myLayers = [];
 	var speed = 150; // px per sec
 	var players = {};
