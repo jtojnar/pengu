@@ -198,3 +198,55 @@ canvas {
 	left: 0;
 	top: 0;
 }
+
+.item {
+	pointer-events: auto;
+	cursor: pointer;
+}
+
+.inventory {
+	position: absolute;
+	background: #9bacb3;
+	border-radius: .5em;
+	width: 250px;
+	height: 400px;
+	z-index: 20000000;
+}
+
+.inventory-inner {
+	position: absolute;
+	background: #f7f7f5;
+	border-radius: .25em;
+	left: 5px;
+	top: 45px;
+	width: 240px;
+	height: 350px;
+	overflow: scroll;
+
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	align-content: flex-start;
+	align-items: flex-start;
+}
+
+.inventory .close {
+	position: absolute;
+	top: -.75em;
+	right: -.75em;
+}
+
+.close {
+	background: #FFFFFF;
+	border: 3px solid #000000;
+	border-radius: 50%;
+	box-sizing: border-box;
+	color: #000000;
+	display: block;
+	font-weight: bold;
+	height: 1.5em;
+	text-align: center;
+	text-decoration: none;
+	width: 1.5em;
+}

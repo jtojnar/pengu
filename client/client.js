@@ -37,13 +37,35 @@ $(function () {
 	view.parent().append(overlay);
 	var map = null;
 	var items = null;
+	var itemsLoaded = new $.Deferred();
 	var myName = null;
 	var myRoom = 'plaza';
+	var myCloset = [];
 	var audio = $('<audio loop="loop"></audio>');
 	view.append(audio);
 	var canvas = $('<canvas width="800" height="600"></canvas>');
 	var ctx = canvas.get(0).getContext('2d');
 	view.append(canvas);
+
+	var inventory = $('<div class="inventory"><a href="#" class="close">×</a><div class="inventory-inner"></div></div>');
+	view.append(inventory);
+	itemsLoaded.done(fillInventory);
+	$('.inventory-inner').delegate('img', 'click', function inventoryItemClicked(e) {
+		connection.send(JSON.stringify({type: 'dress', itemId: $(this).attr('data-item')}));
+	});
+	inventory.hide();
+	$('.inventory').click(function stopPropagation(e) {
+		e.preventDefault();
+		e.stopPropagation();
+	});
+	$('.inventory .close').click(function hideInventory(e) {
+		$(this).parent().hide();
+	});
+	$('#openInventory').click(function hideInventory(e) {
+		$('.inventory').show();
+		e.preventDefault();
+		e.stopPropagation();
+	});
 
 	$('#toggleMusic').click(function toggleMusic(e) {
 		audio.get(0).muted = !audio.get(0).muted;
@@ -69,7 +91,6 @@ $(function () {
 	}
 
 	var connection = new WebSocket('ws://'+window.location.hostname + (window.location.port == '' ? '' : ':' + window.location.port));
-	var itemsLoaded = new $.Deferred();
 
 	connection.onopen = function () {
 		connection.send(JSON.stringify({type: 'init', name: getParameterByName('u')}));
@@ -127,6 +148,15 @@ $(function () {
 			}
 		} else if(json.type === 'say') {
 			speakForPlayer(json.name, json.text);
+		} else if(json.type === 'dress') {
+			itemsLoaded.done(function() {
+				dressPlayer(json.name, json.clothing);
+			});
+		} else if(json.type === 'syncCloset') {
+			itemsLoaded.done(function() {
+				myCloset = json.closet;
+				fillInventory();
+			});
 		} else {
 			console.log('Hmm..., I\'ve never seen JSON like this: ', json);
 		}
@@ -230,6 +260,15 @@ $(function () {
 			players[name].append($('<img src="/content/items/' + findById(items, clothing[i]).file + '" class="clothing">'));
 		}
 	}
+	function fillInventory() {
+		$('.inventory-inner img').remove();
+		for(var i = 0; i < myCloset.length; i++) {
+			var itemData = findById(items, myCloset[i]);
+			var item = $('<img src="/content/items/paper/' + itemData.id + '.png" width="50" height="50" alt="" title="' + itemData.title + '" data-item="' + itemData.id + '">');
+			$('.inventory-inner').append(item);
+		};
+		$('.inventory-inner').vertiscroll({ width:5, color:'#f07' });
+	}
 
 	function loadRoom() {
 		var promises = [];
@@ -264,6 +303,19 @@ $(function () {
 			if(layerdata.alternate) {
 				layer.hide();
 			}
+
+			if(layerdata.item) {
+				layer.addClass('item');
+				layer.attr('data-item', layerdata.item);
+				layer.click(function itemClicked(e) {
+					var itemId = $(this).attr('data-item');
+					if(confirm('Opravdu chceš získat ' + findById(items, parseInt(itemId)).title)) {
+						connection.send(JSON.stringify({type: 'addItem', itemId: itemId}));
+					}
+					e.stopPropagation();
+				})
+			}
+
 			myLayers.push(layer);
 			view.append(layer);
 		}

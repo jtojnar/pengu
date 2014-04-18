@@ -120,11 +120,12 @@ wsServer.on('request', function(request) {
 				if(json.type == 'init' && connection.name == null) {
 					var name = connection.name = json.name;
 					connection.sendUTF(JSON.stringify({type: 'sync', name: name, data: players}));
-					players[name] = {x: 550, y: 500, room: 'plaza', clothing: []};
+					players[name] = {x: 550, y: 500, room: 'plaza', clothing: [], closet: []};
 					console.info('Initial handshake with ' + name);
 					for(var i=0; i < clients.length; i++) {
 						clients[i].sendUTF(JSON.stringify({type: 'enter', name: name, room: players[name].room, x: players[name].x, y: players[name].y, clothing: players[name].clothing}));
 					}
+					connection.sendUTF(JSON.stringify({type: 'syncCloset', closet: players[name].closet}));
 				} else if(json.type == 'move') {
 					var travel = false;
 					var name = connection.name;
@@ -159,6 +160,30 @@ wsServer.on('request', function(request) {
 					console.log(name + ' said ' + json.text);
 					for(var i=0; i < clients.length; i++) {
 						clients[i].sendUTF(JSON.stringify({type: 'say', name: name, text: json.text}));
+					}
+				} else if(json.type == 'addItem') {
+					var name = connection.name;
+					json.itemId = parseInt(json.itemId);
+					if(players[name].closet.indexOf(json.itemId) === -1) {
+						players[name].closet.push(json.itemId);
+					}
+					connection.sendUTF(JSON.stringify({type: 'syncCloset', closet: players[name].closet}));
+					console.log(name + ' acquired ' + json.itemId);
+				} else if(json.type == 'dress') {
+					var name = connection.name;
+					json.itemId = parseInt(json.itemId);
+					console.log(players[name].closet.indexOf(json.itemId), players[name].clothing.indexOf(json.itemId));
+					if(players[name].closet.indexOf(json.itemId) > -1) {
+						if(players[name].clothing.indexOf(json.itemId) > -1) {
+							players[name].clothing.splice(players[name].clothing.indexOf(json.itemId), 1);
+							console.log(name + ' undressed ' + json.itemId);
+						} else {
+							players[name].clothing.push(json.itemId);
+							console.log(name + ' dressed ' + json.itemId);
+						}
+						for(var i=0; i < clients.length; i++) {
+							clients[i].sendUTF(JSON.stringify({type: 'dress', name: name, clothing: players[name].clothing}));
+						}
 					}
 				}
 			} catch(ex) {
