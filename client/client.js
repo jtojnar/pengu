@@ -271,6 +271,13 @@ $(function () {
 				ctx.stroke();
 				ctx.closePath();
 			}
+			ctx.beginPath();
+			ctx.strokeStyle = '#06d2d4'
+			ctx.moveTo(map[myRoom].spawn.x, map[myRoom].spawn.y-6);
+			ctx.lineTo(map[myRoom].spawn.x + Math.sqrt(45), map[myRoom].spawn.y+3);
+			ctx.lineTo(map[myRoom].spawn.x - Math.sqrt(45), map[myRoom].spawn.y+3);
+			ctx.lineTo(map[myRoom].spawn.x, map[myRoom].spawn.y-6);
+			ctx.stroke();
 		}
 
 		$.when.apply($, promises).then(function() {
