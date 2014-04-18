@@ -80,14 +80,37 @@ body {
 	border-left: 0.5em solid transparent;
 	border-right: 0.5em solid transparent; 
 }
-#message {
+
+.panel {
 	z-index: 20000;
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-	border: 0;
-	box-sizing: border-box;
+	height: 20px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	align-items: center;
+	background: #9bacb3;
 }
+
+.panel>* {
+	order: 0;
+	flex: 0 1 auto;
+	height: 19px;
+}
+
+#message {
+	border: 0;
+	background: #f7f7f5;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	height: 18px;
+	flex: 1 1 auto;
+}
+
 #overlay {
 	z-index: 999999;
 	background-color: #e2e2e2;
