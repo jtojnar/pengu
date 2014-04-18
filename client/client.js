@@ -211,7 +211,7 @@ $(function () {
 		players[name].css({top: y, left: x});
 	}
 	function dressPlayer(name, clothing) {
-		players[name].remove('img.clothing');
+		players[name].find('img.clothing').remove();
 		console.log(clothing);
 		for(var i = 0; i < clothing.length; i++) {
 			console.log(findById(items, clothing[i]).file);
