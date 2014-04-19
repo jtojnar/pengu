@@ -20,5 +20,12 @@
 		"type": "hand",
 		"tags": ["cake", "slice of cake", "kus dortu", "dort", "beta"],
 		"file": "cake-piece-small.png"
+	},
+	{
+		"id": 4,
+		"title": "Zelený citron",
+		"type": "hand",
+		"tags": ["lemon", "green", "fruit", "zelený", "citron", "ovoce"],
+		"file": "4-small.png"
 	}
 ]
