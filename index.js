@@ -43,7 +43,7 @@ if(env == 'development') {
 
 
 app.get('/', function(req, res){
-	res.send('<script>window.location.href = "/client/client.html?u=" + encodeURIComponent(prompt("Zadej jmeno"));</script>');
+	res.send('<script>while(true) {var name = prompt("Zadej jmeno"); if(name !== "" && name !== null) {name = name.trim(); break;}} window.location.href = "/client/client.html?u=" + encodeURIComponent(name);</script>');
 });
 
 var server = http.createServer(app).listen(app.get('port'));
@@ -144,6 +144,10 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 						var json = JSON.parse(message.utf8Data);
 						console.log(json);
 						if(json.type == 'init' && connection.name == null) {
+							if(json.name.trim() === '') {
+								request.reject();
+								return;
+							}
 							var name = connection.name = json.name;
 							connection.sendUTF(JSON.stringify({type: 'sync', name: name, data: players}));
 							if(!registered.hasOwnProperty(name)) {

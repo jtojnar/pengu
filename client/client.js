@@ -32,6 +32,10 @@ function findById(arr, id) {
 }
 
 $(function () {
+	if(getParameterByName('u').trim() === '') {
+		window.location.href = '/';
+	}
+
 	var view = $('#view');
 	var overlay = $('<div id="overlay"><div><div class="progress"><div>Načítání…</div></div></div></div>');
 	view.parent().append(overlay);
