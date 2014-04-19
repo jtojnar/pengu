@@ -196,10 +196,13 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 								}
 							}
 						} else if(json.type == 'message') {
-							var name = connection.name;
-							console.log(name + ' said ' + json.text);
-							for(var i=0; i < clients.length; i++) {
-								clients[i].sendUTF(JSON.stringify({type: 'say', name: name, text: json.text}));
+							json.text = json.text.trim();
+							if(json.text !== '') {
+								var name = connection.name;
+								console.log(name + ' said ' + json.text);
+								for(var i=0; i < clients.length; i++) {
+									clients[i].sendUTF(JSON.stringify({type: 'say', name: name, text: json.text}));
+								}
 							}
 						} else if(json.type == 'addItem') {
 							var name = connection.name;

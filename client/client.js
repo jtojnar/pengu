@@ -194,8 +194,8 @@ $(function () {
 	});
 
 	$('#message').keydown(function(e) {
-		if(e.keyCode == 13){
-			connection.send(JSON.stringify({type: 'message', text: $(this).val()}));
+		if(e.keyCode == 13 && $(this).val().trim() !== ''){
+			connection.send(JSON.stringify({type: 'message', text: $(this).val().trim()}));
 			$(this).val('');
 		}
 	});
