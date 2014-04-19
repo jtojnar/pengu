@@ -90,6 +90,7 @@ function getTarget(room, line) {
 
 var clients = [];
 var players = {};
+var registered = {};
 var rooms = JSON.parse(require('fs').readFileSync(__dirname + '/content/world/map.json', 'utf8'), function (key, value) {
 	var type;
 	if(value && typeof value === 'object') {
@@ -120,7 +121,14 @@ wsServer.on('request', function(request) {
 				if(json.type == 'init' && connection.name == null) {
 					var name = connection.name = json.name;
 					connection.sendUTF(JSON.stringify({type: 'sync', name: name, data: players}));
-					players[name] = {x: 550, y: 500, room: 'plaza', clothing: [], closet: []};
+					if(!registered.hasOwnProperty(name)) {
+						registered[name] = {clothing: [], closet: [], registered: (new Date).toUTCString()};
+					}
+					players[name] = registered[name];
+					players[name].x = 550;
+					players[name].y = 500;
+					players[name].room = 'plaza';
+
 					console.info('Initial handshake with ' + name);
 					for(var i=0; i < clients.length; i++) {
 						clients[i].sendUTF(JSON.stringify({type: 'enter', name: name, room: players[name].room, x: players[name].x, y: players[name].y, clothing: players[name].clothing}));
@@ -198,6 +206,7 @@ wsServer.on('request', function(request) {
 			// remove the connection from the pool
 			clients.splice(index, 1);
 		}
+		registered[connection.name] = players[connection.name];
 		players.removeItem(connection.name);
 		console.log((new Date()) + ' Peer ' + connection.remoteAddress + '(' + connection.name + ') disconnected.');
 		for(var i=0; i < clients.length; i++) {
