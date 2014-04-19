@@ -219,7 +219,6 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 						} else if(json.type == 'dress') {
 							var name = connection.name;
 							json.itemId = parseInt(json.itemId);
-							console.log(players[name].closet.indexOf(json.itemId), players[name].clothing.indexOf(json.itemId));
 							if(players[name].closet.indexOf(json.itemId) > -1) {
 								if(players[name].clothing.indexOf(json.itemId) > -1) {
 									players[name].clothing.splice(players[name].clothing.indexOf(json.itemId), 1);
