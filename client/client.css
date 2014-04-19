@@ -250,3 +250,35 @@ canvas {
 	text-decoration: none;
 	width: 1.5em;
 }
+
+.log {
+	right: 100px;
+	top: 50px;
+	position: absolute;
+	background: #9bacb3;
+	border-radius: .5em;
+	width: 250px;
+	height: 400px;
+	z-index: 20000000;
+}
+
+.log-inner {
+	position: absolute;
+	background: #f7f7f5;
+	border-radius: .25em;
+	left: 5px;
+	top: 45px;
+	width: 240px;
+	height: 350px;
+	overflow: scroll;
+}
+
+.log .close {
+	position: absolute;
+	top: -.75em;
+	right: -.75em;
+}
+
+.log-inner p {
+	margin: .15em .25em;
+}

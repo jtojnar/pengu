@@ -47,6 +47,23 @@ $(function () {
 	var ctx = canvas.get(0).getContext('2d');
 	view.append(canvas);
 
+	var log = $('<div class="log"><a href="#" class="close">×</a><div class="log-inner"></div></div>');
+	view.append(log);
+	$('.log-inner').vertiscroll({ width:5, color:'#f07', footer: 0 });
+	log.hide();
+	$('.log').click(function stopPropagation(e) {
+		e.preventDefault();
+		e.stopPropagation();
+	});
+	$('.log .close').click(function hideLog(e) {
+		$(this).parent().hide();
+	});
+	$('#toggleLog').click(function toggleLog(e) {
+		$('.log').toggle();
+		e.preventDefault();
+		e.stopPropagation();
+	});
+
 	var inventory = $('<div class="inventory"><a href="#" class="close">×</a><div class="inventory-inner"></div></div>');
 	view.append(inventory);
 	itemsLoaded.done(fillInventory);
@@ -147,6 +164,16 @@ $(function () {
 				movePlayer(json.name, json.x, json.y);
 			}
 		} else if(json.type === 'say') {
+			var scrollDown = false;
+			if(($('.log-inner').scrollTop() + $('.log-inner').height()) === $('.log-inner').get(0).scrollHeight) {
+				scrollDown = true;
+			}
+			console.log($('.log-inner').scrollTop(), $('.log-inner').height());
+			$('.log-inner').append($('<p><strong>' + json.name + '</strong> ' + json.text + '</p>'));
+			if(scrollDown) {
+				$('.log-inner').scrollTop($('.log-inner').get(0).scrollHeight);
+			}
+
 			speakForPlayer(json.name, json.text);
 		} else if(json.type === 'dress') {
 			itemsLoaded.done(function() {
