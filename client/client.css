@@ -123,74 +123,66 @@ body {
 	top: 0;
 	width: 100%;
 	height: 100%;
+	display: flex;
+	align-items: center;
 }
 
-#overlay > div {
-	text-align: center;
-	position: relative;
-	top: 50%;
-	transform: translateY(-50%);
+#overlay > .spinner {
+	self-align: center;
 }
 
-/* http://lea.verou.me/2013/11/cleanest-css-spinner-ever/ */
+/* http://www.designcouch.com/home/why/2013/05/23/dead-simple-pure-css-loading-spinner/ */
 
-@keyframes spin {
-	to { transform: rotate(1turn); }
-}
-
-.progress {
-	position: relative;
-	display: inline-block;
-	width: 5em;
-	height: 5em;
-	margin: 0 .5em;
-	font-size: 12px;
-	text-indent: 999em;
+.spinner {
+	text-indent: 100%;
 	overflow: hidden;
-	animation: spin 1s infinite steps(8);
+	height: 60px;
+	width: 60px;
+	margin: 0px auto;
+	position: relative;
+	-webkit-animation: rotation 1s infinite linear;
+	-moz-animation: rotation 1s infinite linear;
+	-o-animation: rotation 1s infinite linear;
+	animation: rotation 1s infinite linear;
+	border: 6px solid rgba(0,174,239,.15);
+	border-top-color: rgba(0,174,239,.8);
+	border-radius: 100%;
 }
 
-.small.progress {
-	font-size: 6px;
+@-webkit-keyframes rotation {
+	from {
+		-webkit-transform: rotate(0deg);
+	}
+	to {
+		-webkit-transform: rotate(359deg);
+	}
 }
 
-.large.progress {
-	font-size: 24px;
+@-moz-keyframes rotation {
+	from {
+		-moz-transform: rotate(0deg);
+	}
+	to {
+		-moz-transform: rotate(359deg);
+	}
 }
 
-.progress:before,
-.progress:after,
-.progress > div:before,
-.progress > div:after {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 2.25em; /* (container width - part width)/2  */
-	width: .5em;
-	height: 1.5em;
-	border-radius: .2em;
-	background: #eee;
-	box-shadow: 0 3.5em #eee; /* container height - part height */
-	transform-origin: 50% 2.5em; /* container height / 2 */
+@-o-keyframes rotation {
+	from {
+		-o-transform: rotate(0deg);
+	}
+	to {
+		-o-transform: rotate(359deg);
+	}
 }
 
-.progress:before {
-	background: #555;
-}
-
-.progress:after {
-	transform: rotate(-45deg);
-	background: #777;
-}
-
-.progress > div:before {
-	transform: rotate(-90deg);
-	background: #999;
-}
-
-.progress > div:after {
-	transform: rotate(-135deg);
-	background: #bbb;
+@keyframes rotation {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(359deg);
+	}
 }
 
 canvas {

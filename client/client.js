@@ -37,7 +37,7 @@ $(function () {
 	}
 
 	var view = $('#view');
-	var overlay = $('<div id="overlay"><div><div class="progress"><div>Načítání…</div></div></div></div>');
+	var overlay = $('<div id="overlay"><div class="spinner">Načítání…</div></div>');
 	view.parent().append(overlay);
 	var map = null;
 	var items = null;
