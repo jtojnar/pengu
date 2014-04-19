@@ -172,8 +172,7 @@ $(function () {
 			if(($('.log-inner').scrollTop() + $('.log-inner').height()) === $('.log-inner').get(0).scrollHeight) {
 				scrollDown = true;
 			}
-			console.log($('.log-inner').scrollTop(), $('.log-inner').height());
-			$('.log-inner').append($('<p><strong>' + json.name + '</strong> ' + json.text + '</p>'));
+			$('.log-inner').append($('<p><strong>' + json.name + '</strong> </p>').append(document.createTextNode(json.text)));
 			if(scrollDown) {
 				$('.log-inner').scrollTop($('.log-inner').get(0).scrollHeight);
 			}
