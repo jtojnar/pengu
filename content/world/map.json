@@ -17,10 +17,10 @@
 	},
 	"bar": {
 		"layers": [
-			{"id": "background", "file": "bar.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0},
-			{"id": "bar", "file": "bar.bar.png", "width": 800, "height": 600, "x": 0, "y": 0},
-			{"id": "door.closed", "file": "bar.door.closed.png", "width": 800, "height": 600, "x": 0, "y": 0},
-			{"id": "door.open", "file": "bar.door.open.png", "width": 800, "height": 600, "x": 0, "y": 0, "alternate": "door.closed"}
+			{"id": "background", "file": "bar/background.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0},
+			{"id": "bar", "file": "bar/bar.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0},
+			{"id": "door.closed", "file": "bar/door.closed.png", "width": 800, "height": 600, "x": 0, "y": 0},
+			{"id": "door.open", "file": "bar/door.open.png", "width": 800, "height": 600, "x": 0, "y": 0, "alternate": "door.closed"}
 		],
 		"spawn": {"_class": "Point", "x": 450, "y": 330},
 		"zones": [
