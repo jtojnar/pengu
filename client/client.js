@@ -128,6 +128,14 @@ $(function () {
 		});
 	};
 
+	connection.onclose = function(e) {
+		clearInterval(monitor);
+		alert(e.reason);
+		if(e.code === 4001 || e.code === 4002) {
+			window.location.href = '/';
+		}
+	}
+
 	connection.onerror = function (error) {
 		view.html('<p>Promiň, nefunguje server nebo tvé připojení.</p>');
 	};

@@ -149,6 +149,10 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 								connection.drop(pengu.NO_USERNAME_PROVIDED, 'No username provided');
 								return;
 							}
+							if(players.hasOwnProperty(json.name)) {
+								connection.drop(pengu.USERNAME_ALREADY_BEING_USED, 'Username already being used');
+								return;
+							}
 							var name = connection.name = json.name;
 							connection.sendUTF(JSON.stringify({type: 'sync', name: name, data: players}));
 							if(!registered.hasOwnProperty(name)) {
