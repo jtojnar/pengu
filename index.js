@@ -43,7 +43,7 @@ if(env == 'development') {
 
 
 app.get('/', function(req, res){
-	res.send('<script>while(true) {var name = prompt("Zadej jmeno"); if(name !== "" && name !== null) {name = name.trim(); break;}} window.location.href = "/client/client.html?u=" + encodeURIComponent(name);</script>');
+	res.send('<script>while(true) {var playerName = prompt("Zadej jmeno"); if(playerName !== null && playerName.trim() !== "") {break;}} window.location.href = "/client/client.html?u=" + encodeURIComponent(playerName.trim());</script>');
 });
 
 var server = http.createServer(app).listen(app.get('port'));
