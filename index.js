@@ -14,6 +14,7 @@ var poly = require('./poly');
 var Point = poly.Point;
 var Polygon = poly.Polygon;
 var Line = poly.Line;
+var pengu = require('./pengu');
 
 Object.prototype.removeItem = function(key) {
 	if(!this.hasOwnProperty(key)){
@@ -144,8 +145,8 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 						var json = JSON.parse(message.utf8Data);
 						console.log(json);
 						if(json.type == 'init' && connection.name == null) {
-							if(json.name.trim() === '') {
-								request.reject();
+							if(!json.name || json.name.trim() === '') {
+								connection.drop(pengu.NO_USERNAME_PROVIDED, 'No username provided');
 								return;
 							}
 							var name = connection.name = json.name;
@@ -260,7 +261,7 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 				}
 				registered[connection.name] = players[connection.name];
 				players.removeItem(connection.name);
-				console.log((new Date()) + ' Peer ' + connection.remoteAddress + '(' + connection.name + ') disconnected.');
+				console.log((new Date()) + ' Peer ' + connection.remoteAddress + '(' + connection.name + ') disconnected.' + (description ? ' Reason: ' + description : ''));
 				for(var i=0; i < clients.length; i++) {
 					clients[i].sendUTF(JSON.stringify({type: 'exit', name: connection.name}));
 				}
