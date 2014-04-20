@@ -82,8 +82,8 @@ $(function () {
 	$('.inventory .close').click(function hideInventory(e) {
 		$(this).parent().hide();
 	});
-	$('#openInventory').click(function hideInventory(e) {
-		$('.inventory').show();
+	$('#toggleInventory').click(function toggleInventory(e) {
+		$('.inventory').toggle();
 		e.preventDefault();
 		e.stopPropagation();
 	});
