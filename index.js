@@ -64,7 +64,7 @@ app.get('/', function(req, res) {
 		res.statusCode = 200;
 		res.setHeader('X-User-Name', req.session.user);
 		res.setHeader('X-User-Group', req.session.group);
-		res.sendfile(__dirname + '/client/client.html');
+		res.sendfile(__dirname + '/client.html');
 	}
 });
 
