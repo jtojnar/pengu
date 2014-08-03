@@ -208,9 +208,9 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 							var name = connection.name = json.name;
 							connection.sendUTF(JSON.stringify({type: 'sync', name: name, data: players}));
 							if(!registered.hasOwnProperty(name)) {
-								registered[name] = {clothing: [], closet: [], registered: (new Date).toUTCString()};
+								registered[name] = {clothing: [], closet: [], registered: (new Date).toUTCString(), group: json.group};
 								if(dbEnabled) {
-									pgclient.query('insert into "penguin"("name", "closet", "clothing", "registered") VALUES($1, $2, $3, $4)', [name, JSON.stringify(registered[name].closet), JSON.stringify(registered[name].clothing), registered[name].registered], function insertPenguinToDb(err) {
+									pgclient.query('insert into "penguin"("name", "closet", "clothing", "registered", "group") VALUES($1, $2, $3, $4, $5)', [name, JSON.stringify(registered[name].closet), JSON.stringify(registered[name].clothing), registered[name].registered, registered[name].group], function insertPenguinToDb(err) {
 										if(err) {
 											console.log(err);
 										}
@@ -260,9 +260,37 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 							json.text = json.text.trim();
 							if(json.text !== '') {
 								var name = connection.name;
-								console.log(name + ' said ' + json.text);
-								for(var i=0; i < clients.length; i++) {
-									clients[i].sendUTF(JSON.stringify({type: 'say', name: name, text: json.text}));
+								if(json.text.indexOf('/') === 0) {
+									if(json.text.indexOf('/mute ') === 0 && ['admin', 'moderator'].indexOf(players[name].group) > -1) {
+										var bannedName = json.text.substr(6);
+										players[bannedName].banned = true;
+										if(dbEnabled) {
+											pgclient.query('update "penguin" set "banned"=true where "name"=$1', [bannedName], function mutePenguin(err) {
+												if(err) {
+													console.log(err);
+												}
+											});
+										}
+									} else if(json.text.indexOf('/unmute ') === 0 && ['admin', 'moderator'].indexOf(players[name].group) > -1) {
+										var bannedName = json.text.substr(8);
+										players[bannedName].banned = false;
+										if(dbEnabled) {
+											pgclient.query('update "penguin" set "banned"=false where "name"=$1', [bannedName], function mutePenguin(err) {
+												if(err) {
+													console.log(err);
+												}
+											});
+										}
+									}
+								} else {
+									if(!players[name].banned) {
+										console.log(name + ' said ' + json.text);
+										for(var i=0; i < clients.length; i++) {
+											clients[i].sendUTF(JSON.stringify({type: 'say', name: name, text: json.text}));
+										}
+									} else {
+										connection.sendUTF(JSON.stringify({type: 'say', name: name, text: json.text}));
+									}
 								}
 							}
 						} else if(json.type == 'addItem') {

@@ -114,7 +114,7 @@ $(function () {
 	var connection = new WebSocket('ws://'+window.location.hostname + (window.location.port == '' ? '' : ':' + window.location.port));
 
 	connection.onopen = function () {
-		connection.send(JSON.stringify({type: 'init', name: getParameterByName('u')}));
+		connection.send(JSON.stringify({type: 'init', name: getParameterByName('u'), group: getParameterByName('g')}));
 		var mapLoaded = $.getJSON('/content/world/map.json').done(function(data){
 			map = data;
 		});
