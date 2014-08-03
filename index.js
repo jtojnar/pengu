@@ -15,6 +15,15 @@ var Point = poly.Point;
 var Polygon = poly.Polygon;
 var Line = poly.Line;
 var pengu = require('./pengu');
+var openid = require('openid');
+var relyingParty = new openid.RelyingParty(
+	process.env.OPENID_VERIFY,
+	process.env.OPENID_REALM, // Realm (optional, specifies realm for OpenID authentication)
+	true, // Use stateless verification
+	false, // Strict mode
+	[new openid.AttributeExchange()] // List of extensions to enable and include
+);
+
 
 Object.prototype.removeItem = function(key) {
 	if(!this.hasOwnProperty(key)){
@@ -36,6 +45,8 @@ app.set('port', process.env.PORT || 8080);
 var serveStatic = require('serve-static');
 app.use('/content', serveStatic(__dirname + '/content'));
 app.use('/client', serveStatic(__dirname + '/client'));
+var session = require('express-session')
+app.use(session({secret: Math.random().toString()}));
 
 var env = process.env.NODE_ENV || 'development';
 if(env == 'development') {
@@ -43,8 +54,49 @@ if(env == 'development') {
 }
 
 
-app.get('/', function(req, res){
-	res.send('<script>while(true) {var playerName = prompt("Zadej jmeno"); if(playerName !== null && playerName.trim() !== "") {break;}} window.location.href = "/client/client.html?u=" + encodeURIComponent(playerName.trim());</script>');
+app.get('/', function(req, res) {
+	console.log(req.session.user);
+	if(!req.session.user) {
+		res.redirect('/authenticate');
+	} else if(req.query.u != req.session.user || req.query.g != req.session.group) {
+		res.redirect('/?u=' + encodeURIComponent(req.session.user) + '&g=' + encodeURIComponent(req.session.group));
+	} else {
+		res.statusCode = 200;
+		res.setHeader('X-User-Name', req.session.user);
+		res.setHeader('X-User-Group', req.session.group);
+		res.sendfile(__dirname + '/client/client.html');
+	}
+});
+
+app.get('/authenticate', function(req, res) {
+	var identifier = process.env.OPENID_PROVIDER;
+
+	// Resolve identifier, associate, and build authentication URL
+	relyingParty.authenticate(identifier, false, function(error, authUrl) {
+		if(error) {
+			res.statusCode = 403;
+			res.end('Authentication failed: ' + error.message);
+		} else if(!authUrl) {
+			res.statusCode = 403;
+			res.end('Authentication failed');
+		} else {
+			res.redirect(authUrl);
+		}
+	});
+});
+
+app.all('/verify', function(req, res) {
+	relyingParty.verifyAssertion(req, function(error, result) {
+		if(!error && result.authenticated) {
+			console.log(result);
+			req.session.user = result.name;
+			req.session.group = result.group;
+			res.redirect('/?u=' + encodeURIComponent(result.name) + '&g=' + encodeURIComponent(result.group));
+		} else {
+			res.statusCode = 500;
+			res.end('Kolo se nám polámalo');
+		}
+	});
 });
 
 var server = http.createServer(app).listen(app.get('port'));
