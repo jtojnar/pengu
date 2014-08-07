@@ -3,6 +3,7 @@
 	{
 		"id": 1,
 		"title": "Beta čapka FCP",
+		"available": 1,
 		"type": "head",
 		"tags": ["beta", "party", "hat", "čapka", "fan-club-penguin", "fcp", "blue", "head", "modrá", "hlava"],
 		"file": "hat-small.png"
@@ -17,6 +18,7 @@
 	{
 		"id": 3,
 		"title": "Kus dortu",
+		"available": 1,
 		"type": "hand",
 		"tags": ["cake", "slice of cake", "kus dortu", "dort", "beta"],
 		"file": "cake-piece-small.png"

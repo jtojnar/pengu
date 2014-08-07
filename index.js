@@ -35,6 +35,19 @@ Object.prototype.removeItem = function(key) {
 		this.splice(key, 1);
 	}
 };
+
+Array.prototype.getByKey = function(key, value) {
+	var cur = undefined;
+	for(var i = 0, length = this.length; i < length; i++) {
+		if(i in this) {
+			cur = this[i];
+			if(cur[key] === value) {
+				return cur;
+			}
+		}
+	}
+}
+
 Array.prototype.pushArray = function(arr) {
 	this.push.apply(this, arr);
 };
@@ -155,6 +168,7 @@ var rooms = JSON.parse(require('fs').readFileSync(__dirname + '/content/world/ma
 	}
 	return value;
 });
+var items = JSON.parse(require('fs').readFileSync(__dirname + '/content/items/items.json', 'utf8'));
 
 var dbEnabled = true;
 pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
@@ -296,7 +310,7 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 						} else if(json.type == 'addItem') {
 							var name = connection.name;
 							json.itemId = parseInt(json.itemId);
-							if(players[name].closet.indexOf(json.itemId) === -1) {
+							if(players[name].closet.indexOf(json.itemId) === -1 && items.getByKey('id', json.itemId).available) {
 								players[name].closet.push(json.itemId);
 								if(dbEnabled) {
 									pgclient.query('update "penguin" set "closet"=$2 where "name"=$1', [name, JSON.stringify(players[name].closet)], function insertPenguinToDb(err) {
