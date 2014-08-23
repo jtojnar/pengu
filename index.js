@@ -59,7 +59,7 @@ var serveStatic = require('serve-static');
 app.use('/content', serveStatic(__dirname + '/content'));
 app.use('/client', serveStatic(__dirname + '/client'));
 var session = require('express-session')
-app.use(session({secret: Math.random().toString()}));
+app.use(session({secret: Math.random().toString(), cookie: { maxAge: 10000 }}));
 
 var env = process.env.NODE_ENV || 'development';
 if(env == 'development') {
