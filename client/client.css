@@ -216,13 +216,13 @@ canvas {
 	width: 240px;
 	height: 350px;
 	overflow: scroll;
+}
 
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: space-around;
-	align-content: flex-start;
-	align-items: flex-start;
+.inventory img {
+	display: inline-block;
+	margin: 2px;
+	border: 2px solid #9bacb3;
+	border-radius: 5px;
 }
 
 .inventory .close {
