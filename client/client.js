@@ -195,6 +195,8 @@ $(function () {
 				myCloset = json.closet;
 				fillInventory();
 			});
+		} else if(json.type === 'error') {
+			alert(json.message);
 		} else {
 			console.log('Hmm..., I\'ve never seen JSON like this: ', json);
 		}

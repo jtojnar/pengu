@@ -310,7 +310,10 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 						} else if(json.type == 'addItem') {
 							var name = connection.name;
 							json.itemId = parseInt(json.itemId);
-							if(players[name].closet.indexOf(json.itemId) === -1 && items.getByKey('id', json.itemId).available) {
+							if(!items.getByKey('id', json.itemId).available) {
+								connection.sendUTF(JSON.stringify({type: 'error', message: 'Tato věc nejde v současnosti získat.'}));
+								console.log(name + ' attempted to acquire ' + json.itemId);
+							} else if(players[name].closet.indexOf(json.itemId) === -1) {
 								players[name].closet.push(json.itemId);
 								if(dbEnabled) {
 									pgclient.query('update "penguin" set "closet"=$2 where "name"=$1', [name, JSON.stringify(players[name].closet)], function insertPenguinToDb(err) {
@@ -319,9 +322,12 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 										}
 									});
 								}
+								connection.sendUTF(JSON.stringify({type: 'syncCloset', closet: players[name].closet}));
+								console.log(name + ' acquired ' + json.itemId);
+							} else {
+								connection.sendUTF(JSON.stringify({type: 'error', message: 'Tuto věc již máš.'}));
+								console.log(name + ' attempted to reacquire ' + json.itemId);
 							}
-							connection.sendUTF(JSON.stringify({type: 'syncCloset', closet: players[name].closet}));
-							console.log(name + ' acquired ' + json.itemId);
 						} else if(json.type == 'dress') {
 							var name = connection.name;
 							json.itemId = parseInt(json.itemId);
