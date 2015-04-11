@@ -37,8 +37,7 @@
 			{"id": "door.open", "file": "chom/door.open.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0, "alternate": "door.closed"},
 			{"id": "triangles", "file": "chom/triangles.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0},
 			{"id": "light", "file": "chom/light.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0},
-			{"id": "flies", "file": "chom/flies.gif", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0},
-			{"id": "hat", "file": "../items/hat-room.png", "width": 30, "height": 42, "x": 69, "y": 401, "z": 0, "item": 1}
+			{"id": "flies", "file": "chom/flies.gif", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0}
 		],
 		"ambiance": "bedtime.mp3",
 		"spawn": {"_class": "Point", "x": 360, "y": 540},
