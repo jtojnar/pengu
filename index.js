@@ -153,6 +153,9 @@ function getTarget(room, line) {
 	}
 	closest.x += gap / line.getLength() * (line.start.x - line.end.x);
 	closest.y += gap / line.getLength() * (line.start.y - line.end.y);
+
+	closest.x = Math.round(closest.x);
+	closest.y = Math.round(closest.y);
 	return closest;
 }
 
