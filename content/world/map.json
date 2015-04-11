@@ -1,18 +1,15 @@
 {
 	"plaza": {
-		"layers": [
-			{"id": "background", "file": "plaza/background.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0},
-			{"id": "cake", "file": "plaza/cake.gif", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0}
-		],
+		"layers": [{"id": "background", "file": "plaza.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0}],
 		"spawn": {"_class": "Point", "x": 270, "y": 370},
 		"zones": [
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 0, "y": 267}, {"_class": "Point", "x": 248, "y": 225}, {"_class": "Point", "x": 537, "y": 253}, {"_class": "Point", "x": 799, "y": 291}, {"_class": "Point", "x": 799, "y": 599}, {"_class": "Point", "x": 0, "y": 599}]}, "floor"],
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 120, "y": 314}, {"_class": "Point", "x": 119, "y": 329}, {"_class": "Point", "x": 186, "y": 334}, {"_class": "Point", "x": 188, "y": 316}]}, "door", "bar"],
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 358, "y": 327}, {"_class": "Point", "x": 354, "y": 342}, {"_class": "Point", "x": 425, "y": 345}, {"_class": "Point", "x": 426, "y": 328}]}, "door", "chom"],
-			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 501, "y": 259}, {"_class": "Point", "x": 489, "y": 324}, {"_class": "Point", "x": 585, "y": 378}, {"_class": "Point", "x": 758, "y": 361}, {"_class": "Point", "x": 751, "y": 311}]}, "door", "cake"],
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 243, "y": 526}, {"_class": "Point", "x": 263, "y": 487}, {"_class": "Point", "x": 341, "y": 457}, {"_class": "Point", "x": 395, "y": 465}, {"_class": "Point", "x": 441, "y": 501}, {"_class": "Point", "x": 428, "y": 551}, {"_class": "Point", "x": 311, "y": 579}, {"_class": "Point", "x": 264, "y": 562}]}, "obstacle", "fountain"],
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 84, "y": 255}, {"_class": "Point", "x": 77, "y": 318}, {"_class": "Point", "x": 225, "y": 319}, {"_class": "Point", "x": 235, "y": 228}]}, "obstacle", "house1"],
-			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 313, "y": 232}, {"_class": "Point", "x": 296, "y": 329}, {"_class": "Point", "x": 454, "y": 337}, {"_class": "Point", "x": 468, "y": 247}]}, "obstacle", "house2"]
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 313, "y": 232}, {"_class": "Point", "x": 296, "y": 329}, {"_class": "Point", "x": 454, "y": 337}, {"_class": "Point", "x": 468, "y": 247}]}, "obstacle", "house2"],
+			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 549, "y": 254}, {"_class": "Point", "x": 492, "y": 306}, {"_class": "Point", "x": 489, "y": 344}, {"_class": "Point", "x": 534, "y": 332}, {"_class": "Point", "x": 592, "y": 292}, {"_class": "Point", "x": 608, "y": 363}, {"_class": "Point", "x": 635, "y": 372}, {"_class": "Point", "x": 659, "y": 334}, {"_class": "Point", "x": 711, "y": 391}, {"_class": "Point", "x": 740, "y": 393}, {"_class": "Point", "x": 774, "y": 386}, {"_class": "Point", "x": 733, "y": 310}, {"_class": "Point", "x": 737, "y": 284}]}, "obstacle", "blob"]
 		]
 	},
 	"bar": {
@@ -51,24 +48,6 @@
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 597, "y": 527}, {"_class": "Point", "x": 613, "y": 565}, {"_class": "Point", "x": 759, "y": 569}, {"_class": "Point", "x": 723, "y": 523}]}, "obstacle", "blue"],
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 56, "y": 566}, {"_class": "Point", "x": 199, "y": 569}, {"_class": "Point", "x": 220, "y": 542}, {"_class": "Point", "x": 95, "y": 544}]}, "obstacle", "pinks"],
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 348, "y": 194}, {"_class": "Point", "x": 500, "y": 195}, {"_class": "Point", "x": 498, "y": 369}, {"_class": "Point", "x": 343, "y": 371}]}, "animate", {"_class": "AlternateLayerAnimation", "off": "door.closed", "on": "door.open"}]
-		]
-	},
-	"cake": {
-		"layers": [
-			{"id": "background", "file": "cake/background.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0},
-			{"id": "light", "file": "cake/light.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 2000},
-			{"id": "door.closed", "file": "cake/door.closed.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0},
-			{"id": "door.open", "file": "cake/door.open.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0, "alternate": "door.closed"},
-			{"id": "rug", "file": "cake/rug.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0},
-			{"id": "table", "file": "cake/table.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0},
-			{"id": "hat", "file": "cake/cake-item.png", "width": 63, "height": 74, "x": 211, "y": 291, "z": 0, "item": 3}
-		],
-		"ambiance": "cake/narozeniny.mp3",
-		"spawn": {"_class": "Point", "x": 682, "y": 348},
-		"zones": [
-			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 0, "y": 600}, {"_class": "Point", "x": 0, "y": 446}, {"_class": "Point", "x": 340, "y": 360}, {"_class": "Point", "x": 605, "y": 329}, {"_class": "Point", "x": 800, "y": 316}, {"_class": "Point", "x": 800, "y": 600}]}, "floor"],
-			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 758, "y": 306}, {"_class": "Point", "x": 800, "y": 300}, {"_class": "Point", "x": 800, "y": 390}, {"_class": "Point", "x": 750, "y": 400}]}, "door", "plaza"],
-			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 758, "y": 306}, {"_class": "Point", "x": 800, "y": 300}, {"_class": "Point", "x": 800, "y": 390}, {"_class": "Point", "x": 750, "y": 400}]}, "animate", {"_class": "AlternateLayerAnimation", "off": "door.closed", "on": "door.open"}]
 		]
 	}
 }
