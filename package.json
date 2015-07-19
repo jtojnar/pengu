@@ -4,20 +4,20 @@
 	"version": "0.0.6",
 	"private": true,
 	"dependencies": {
-		"express": "4.x",
-		"express-session": "^1.7.2",
-		"morgan": "~1.0.0",
-		"openid": "^0.5.9",
-		"pg": "^3.0.3",
-		"serve-static": "~1.0.3",
-		"websocket": "1.0",
+		"express": "^4.13.1",
+		"express-session": "^1.11.3",
+		"morgan": "^1.6.1",
+		"openid": "^0.5.13",
+		"pg": "^4.4.0",
+		"serve-static": "^1.10.0",
+		"websocket": "^1.0.19",
 		"gulp": "^3.9.0",
 		"gulp-autoprefixer": "^2.3.1",
 		"gulp-csso": "^1.0.0"
 	},
 	"engines": {
-		"node": "0.10.x",
-		"npm": "1.2.x"
+		"node": "0.12",
+		"npm": "^2.13"
 	},
 	"scripts": {
 		"postinstall": "node node_modules/gulp/bin/gulp"
