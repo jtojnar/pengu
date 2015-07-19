@@ -19,6 +19,7 @@ body {
 	width: 800px;
 	height: 600px;
 	position: relative;
+	user-select: none;
 }
 .layer {
 	pointer-events: none;
@@ -101,6 +102,10 @@ body {
 	order: 0;
 	flex: 0 1 auto;
 	height: 19px;
+}
+
+.panel a {
+	user-select: none;
 }
 
 #message {
