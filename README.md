@@ -15,6 +15,7 @@ CREATE TABLE "penguin" (
 ```
 
 2. Run `npm install`
-3. Start with `foreman start`, defaults to port 5000 (configurable via `POST` env variable).
+3. Compile assets using `gulp`
+4. Start with `foreman start`, defaults to port 5000 (configurable via `PORT` env variable).
 
 Licensed under MIT.
