@@ -141,17 +141,18 @@ function getTarget(room, line) {
 		let targetDistance = Infinity;
 		for (let i = intersections.length - 1; i >= 0; i--) {
 			let intersection = intersections[i];
-			let distance = line.start.getDistance(intersection);
+			let distance = Math.abs(line.start.x - intersection.x);
 			if (targetDistance > distance) {
 				targetDistance = distance;
 				target = intersection;
 			}
 		}
+
+		target.x += gap / line.getLength() * (line.start.x - line.end.x);
+		target.y += gap / line.getLength() * (line.start.y - line.end.y);
 	} else {
 		target = line.end;
 	}
-	target.x += gap / line.getLength() * (line.start.x - line.end.x);
-	target.y += gap / line.getLength() * (line.start.y - line.end.y);
 
 	target.x = Math.round(target.x);
 	target.y = Math.round(target.y);
