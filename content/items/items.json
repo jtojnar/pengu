@@ -26,5 +26,13 @@
 		"type": "hand",
 		"tags": ["lemon", "green", "fruit", "zelený", "citron", "ovoce"],
 		"file": "4-small.png"
+	},
+	{
+		"id": 5,
+		"title": "Zelená nafukovací kachna",
+		"available": 1,
+		"type": "body",
+		"tags": ["ducky", "green", "inflatable"],
+		"file": "green-ducky-small.png"
 	}
 ]
