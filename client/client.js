@@ -304,10 +304,12 @@ $(function () {
 	}
 	function fillInventory() {
 		$('.inventory-inner img').remove();
-		for (var i = 0; i < myCloset.length; i++) {
-			var itemData = findById(items, myCloset[i]);
-			var item = $('<img src="/content/items/paper/' + itemData.id + '.png" width="50" height="50" alt="" title="' + itemData.title + '" data-item="' + itemData.id + '">');
-			$('.inventory-inner').append(item);
+		for (var item in myCloset) {
+			if (myCloset.hasOwnProperty(item)) {
+				var itemData = findById(items, parseInt(item));
+				var item = $('<img src="/content/items/paper/' + itemData.id + '.png" width="50" height="50" alt="" title="' + itemData.title + '" data-item="' + itemData.id + '">');
+				$('.inventory-inner').append(item);
+			}
 		}
 		$('.inventory-inner').vertiscroll({ width: 5, color: '#f07' });
 	}

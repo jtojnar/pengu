@@ -225,7 +225,7 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 							let name = connection.name = json.name;
 							connection.sendUTF(JSON.stringify({type: 'sync', name: name, data: players}));
 							if (!registered.hasOwnProperty(name)) {
-								registered[name] = {clothing: [], closet: [], registered: (new Date()).toUTCString(), group: json.group};
+								registered[name] = {clothing: [], closet: {}, registered: (new Date()).toUTCString(), group: json.group};
 								if (dbEnabled) {
 									pgclient.query('insert into "penguin"("name", "closet", "clothing", "registered", "group") VALUES($1, $2, $3, $4, $5)', [name, JSON.stringify(registered[name].closet), JSON.stringify(registered[name].clothing), registered[name].registered, registered[name].group], function insertPenguinToDb(err) {
 										if (err) {
@@ -316,8 +316,8 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 							if (!items.getByKey('id', json.itemId).available) {
 								connection.sendUTF(JSON.stringify({type: 'error', message: 'Tato věc nejde v současnosti získat.'}));
 								console.log(name + ' attempted to acquire ' + json.itemId);
-							} else if (players[name].closet.indexOf(json.itemId) === -1) {
-								players[name].closet.push(json.itemId);
+							} else if (!players[name].closet.hasOwnProperty(json.itemId)) {
+								players[name].closet[json.itemId] = {'date': new Date(), 'means': 'collect'};
 								if (dbEnabled) {
 									pgclient.query('update "penguin" set "closet"=$2 where "name"=$1', [name, JSON.stringify(players[name].closet)], function insertPenguinToDb(err) {
 										if (err) {
@@ -334,7 +334,7 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 						} else if (json.type === 'dress') {
 							let name = connection.name;
 							json.itemId = parseInt(json.itemId);
-							if (players[name].closet.indexOf(json.itemId) > -1) {
+							if (players[name].closet.hasOwnProperty(json.itemId)) {
 								if (players[name].clothing.indexOf(json.itemId) > -1) {
 									players[name].clothing.splice(players[name].clothing.indexOf(json.itemId), 1);
 									console.log(name + ' undressed ' + json.itemId);
