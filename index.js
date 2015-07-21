@@ -56,8 +56,12 @@ app.set('port', process.env.PORT || 8080);
 let serveStatic = require('serve-static');
 app.use('/content', serveStatic(path.join(__dirname, 'content')));
 app.use('/client', serveStatic(path.join(__dirname, 'client')));
+
 let session = require('express-session');
-app.use(session({secret: Math.random().toString(), cookie: { maxAge: 10000 }}));
+let signedCookie = require('cookie-parser').signedCookie;
+let sessionStore = new session.MemoryStore();
+let secret = Math.random().toString();
+app.use(session({store: sessionStore, resave: true, saveUninitialized: true, secret: secret, cookie: { maxAge: 10000 }, key: 'sid'}));
 
 let env = process.env.NODE_ENV || 'development';
 if (env === 'development') {
@@ -66,11 +70,8 @@ if (env === 'development') {
 
 
 app.get('/', function(req, res) {
-	console.log(req.session.user);
 	if (!req.session.user) {
 		res.redirect('/authenticate');
-	} else if (req.query.u !== req.session.user || req.query.g !== req.session.group) {
-		res.redirect('/?u=' + encodeURIComponent(req.session.user) + '&g=' + encodeURIComponent(req.session.group));
 	} else {
 		res.statusCode = 200;
 		res.setHeader('X-User-Name', req.session.user);
@@ -102,7 +103,7 @@ app.all('/verify', function(req, res) {
 			console.log(result);
 			req.session.user = result.name;
 			req.session.group = result.group;
-			res.redirect('/?u=' + encodeURIComponent(result.name) + '&g=' + encodeURIComponent(result.group));
+			res.redirect('/');
 		} else {
 			res.statusCode = 500;
 			res.end('Kolo se nám polámalo');
@@ -214,15 +215,20 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 						let json = JSON.parse(message.utf8Data);
 						console.log(json);
 						if (json.type === 'init' && connection.name === undefined) {
-							if (!json.name || json.name.trim() === '') {
-								connection.drop(pengu.NO_USERNAME_PROVIDED, 'No username provided');
+							let sid = signedCookie(request.cookies.filter((x) => x.name == 'sid')[0].value, secret);
+							sessionStore.get(sid, function(err, session) {
+							if (err || !session) {
+								connection.drop(pengu.SESSION_READ_ERROR, 'Problems reading session');
+								if (err) {
+									throw err;
+								}
 								return;
 							}
-							if (players.hasOwnProperty(json.name)) {
+							if (players.hasOwnProperty(session.user)) {
 								connection.drop(pengu.USERNAME_ALREADY_BEING_USED, 'Username already being used');
 								return;
 							}
-							let name = connection.name = json.name;
+							let name = connection.name = session.user;
 							connection.sendUTF(JSON.stringify({type: 'sync', name: name, data: players}));
 							if (!registered.hasOwnProperty(name)) {
 								registered[name] = {clothing: [], closet: {}, registered: (new Date()).toUTCString(), group: json.group};
@@ -244,6 +250,7 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 								clients[i].sendUTF(JSON.stringify({type: 'enter', name: name, room: players[name].room, x: players[name].x, y: players[name].y, clothing: players[name].clothing}));
 							}
 							connection.sendUTF(JSON.stringify({type: 'syncCloset', closet: players[name].closet}));
+							});
 						} else if (json.type === 'move') {
 							let travel = false;
 							let name = connection.name;

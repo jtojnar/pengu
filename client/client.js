@@ -1,18 +1,6 @@
 'use strict';
 /* eslint-env browser, jquery */
 
-function getParameterByName(name) {
-	name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
-	var regexS = '[\\?&]' + name + '=([^&#]*)';
-	var regex = new RegExp(regexS);
-	var results = regex.exec(window.location.search);
-	if (results == null) {
-		return '';
-	} else {
-		return decodeURIComponent(results[1].replace(/\+/g, ' '));
-	}
-}
-
 function removeItemNamed(object, key) {
 	if (!object.hasOwnProperty(key)){
 		return;
@@ -34,10 +22,6 @@ function findById(arr, id) {
 }
 
 $(function () {
-	if (getParameterByName('u').trim() === '') {
-		window.location.href = '/';
-	}
-
 	var debugMode = localStorage.getItem('debug') === '1';
 
 	var view = $('#view');
@@ -118,7 +102,7 @@ $(function () {
 	var connection = new WebSocket('ws://' + window.location.hostname + (window.location.port === '' ? '' : ':' + window.location.port));
 
 	connection.onopen = function () {
-		connection.send(JSON.stringify({type: 'init', name: getParameterByName('u'), group: getParameterByName('g')}));
+		connection.send(JSON.stringify({type: 'init'}));
 		var mapLoaded = $.getJSON('/content/world/map.json').done(function(data){
 			map = data;
 		});
