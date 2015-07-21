@@ -38,6 +38,8 @@ $(function () {
 		window.location.href = '/';
 	}
 
+	var debugMode = localStorage.getItem('debug') === '1';
+
 	var view = $('#view');
 	var overlay = $('<div id="overlay"><div class="spinner">Načítání…</div></div>');
 	view.parent().append(overlay);
@@ -364,7 +366,7 @@ $(function () {
 			view.append(layer);
 		}
 
-		if (getParameterByName('debug') == 1) {
+		if (debugMode) {
 			ctx.lineWidth = 3;
 			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 			for (var zonedata in map[myRoom].zones) {
