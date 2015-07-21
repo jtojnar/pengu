@@ -65,7 +65,7 @@ app.use(session({store: sessionStore, resave: true, saveUninitialized: true, sec
 
 let env = process.env.NODE_ENV || 'development';
 if (env === 'development') {
-	app.use(require('morgan')());
+	app.use(require('morgan')('combined'));
 }
 
 
@@ -76,7 +76,7 @@ app.get('/', function(req, res) {
 		res.statusCode = 200;
 		res.setHeader('X-User-Name', req.session.user);
 		res.setHeader('X-User-Group', req.session.group);
-		res.sendfile(path.join(__dirname, 'client.html'));
+		res.sendFile(path.join(__dirname, 'client.html'));
 	}
 });
 
