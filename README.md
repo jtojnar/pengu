@@ -16,6 +16,6 @@ CREATE TABLE "penguin" (
 
 2. Run `npm install`
 3. Compile assets using `gulp`
-4. Start with `foreman start`, defaults to port 5000 (configurable via `PORT` env variable).
+4. Start with `npm start`, the game will run on port set by `PORT` env variable.
 
 Licensed under MIT.
