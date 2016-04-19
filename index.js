@@ -383,3 +383,13 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 		});
 	}
 });
+
+function exitHandler(options) {
+	console.log('Server is going down')
+	for (let client of clients) {
+		client.drop(pengu.SERVER_GOING_DOWN, 'Server is going down');
+	}
+	process.exit();
+}
+
+process.on('SIGINT', exitHandler);
