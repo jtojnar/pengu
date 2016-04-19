@@ -33,5 +33,13 @@
 		"type": "body",
 		"tags": ["ducky", "green", "inflatable"],
 		"file": "green-ducky-small.png"
+	},
+	{
+		"id": 6,
+		"title": "Červený balonek",
+		"available": 1,
+		"type": "hand",
+		"tags": ["balloon", "red", "birthday", "celebration", "party"],
+		"file": "red-balloon.png"
 	}
 ]

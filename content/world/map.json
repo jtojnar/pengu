@@ -1,6 +1,9 @@
 {
 	"plaza": {
-		"layers": [{"id": "background", "file": "plaza.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0}],
+		"layers": [
+			{"id": "background", "file": "plaza-narozeniny10.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0},
+			{"id": "box", "file": "bomba.png", "width": 36, "height": 60, "x": 448, "y": 440, "z": 0, "item": 6}
+		],
 		"spawn": {"_class": "Point", "x": 270, "y": 370},
 		"zones": [
 			[{"_class": "Polygon", "points": [{"_class": "Point", "x": 0, "y": 267}, {"_class": "Point", "x": 248, "y": 225}, {"_class": "Point", "x": 537, "y": 253}, {"_class": "Point", "x": 799, "y": 291}, {"_class": "Point", "x": 799, "y": 599}, {"_class": "Point", "x": 0, "y": 599}]}, "floor"],
