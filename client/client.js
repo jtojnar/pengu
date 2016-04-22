@@ -39,9 +39,9 @@ $(function () {
 	var ctx = canvas.get(0).getContext('2d');
 	view.append(canvas);
 
-	var log = $('<div class="log"><a href="#" class="close">×</a><div class="log-inner"></div></div>');
+	var log = $('<div class="log dialogue"><h2 class="dialogue-header">Záznam chatu</h2><a href="#" class="close">×</a><div class="dialogue-inner"></div></div>');
 	view.append(log);
-	$('.log-inner').vertiscroll({ width: 5, color: '#f07', footer: 0 });
+	$('.log .dialogue-inner').vertiscroll({ width: 5, color: '#f07', footer: 0 });
 	log.hide();
 	$('.log').click(function stopPropagation(e) {
 		e.preventDefault();
@@ -56,10 +56,11 @@ $(function () {
 		e.stopPropagation();
 	});
 
-	var inventory = $('<div class="inventory"><a href="#" class="close">×</a><div class="inventory-inner"></div></div>');
+	var inventory = $('<div class="inventory dialogue"><h2 class="dialogue-header">Šatník</h2><a href="#" class="close">×</a><div class="dialogue-inner"></div></div>');
 	view.append(inventory);
+	$('.inventory .dialogue-inner').vertiscroll({ width: 5, color: '#f07', footer: 0 });
 	itemsLoaded.done(fillInventory);
-	$('.inventory-inner').delegate('img', 'click', function inventoryItemClicked(e) {
+	$('.inventory .dialogue-inner').delegate('img', 'click', function inventoryItemClicked(e) {
 		connection.send(JSON.stringify({type: 'dress', itemId: $(this).attr('data-item')}));
 	});
 	inventory.hide();
@@ -165,12 +166,12 @@ $(function () {
 			}
 		} else if (json.type === 'say') {
 			var scrollDown = false;
-			if (($('.log-inner').scrollTop() + $('.log-inner').height()) === $('.log-inner').get(0).scrollHeight) {
+			if (($('.log .dialogue-inner').scrollTop() + $('.log .dialogue-inner').height()) === $('.log .dialogue-inner').get(0).scrollHeight) {
 				scrollDown = true;
 			}
-			$('.log-inner').append($('<p><strong>' + json.name + '</strong> </p>').append(document.createTextNode(json.text)));
+			$('.log .dialogue-inner').append($('<p><strong>' + json.name + '</strong> </p>').append(document.createTextNode(json.text)));
 			if (scrollDown) {
-				$('.log-inner').scrollTop($('.log-inner').get(0).scrollHeight);
+				$('.log .dialogue-inner').scrollTop($('.log .dialogue-inner').get(0).scrollHeight);
 			}
 
 			speakForPlayer(json.name, json.text);
@@ -289,15 +290,15 @@ $(function () {
 		}
 	}
 	function fillInventory() {
-		$('.inventory-inner img').remove();
+		$('.inventory .dialogue-inner img').remove();
 		for (var item in myCloset) {
 			if (myCloset.hasOwnProperty(item)) {
 				var itemData = findById(items, parseInt(item));
 				var item = $('<img src="/content/items/paper/' + itemData.id + '.png" width="50" height="50" alt="" title="' + itemData.title + '" data-item="' + itemData.id + '">');
-				$('.inventory-inner').append(item);
+				$('.inventory .dialogue-inner').append(item);
 			}
 		}
-		$('.inventory-inner').vertiscroll({ width: 5, color: '#f07' });
+		$('.inventory .dialogue-inner').vertiscroll({ width: 5, color: '#f07' });
 	}
 
 	function loadRoom() {
