@@ -77,6 +77,31 @@ $(function () {
 		e.stopPropagation();
 	});
 
+	var draggedDialogue = null;
+	var dragOffset = {top: 0, left: 0};
+
+	$(document.body).on('mousemove', function(e) {
+		if (draggedDialogue) {
+			draggedDialogue.offset({
+				top: e.pageY - dragOffset.top,
+				left: e.pageX - dragOffset.left
+			});
+		}
+	});
+
+
+	$(document.body).on('mousedown', '.dialogue-header', function (e) {
+		draggedDialogue = $(e.target).parents('.dialogue');
+		dragOffset = {
+			top:e.pageY -  draggedDialogue.offset().top,
+			left: e.pageX - draggedDialogue.offset().left
+		}
+	});
+
+	$(document.body).on('mouseup', function (e) {
+		draggedDialogue = null;
+	});
+
 	$('#toggleMusic').click(function toggleMusic(e) {
 		audio.get(0).muted = !audio.get(0).muted;
 		if (audio.get(0).muted) {
