@@ -74,8 +74,6 @@ app.get('/', function(req, res) {
 		res.redirect('/authenticate');
 	} else {
 		res.statusCode = 200;
-		res.setHeader('X-User-Name', req.session.user);
-		res.setHeader('X-User-Group', req.session.group);
 		res.sendFile(path.join(__dirname, 'client.html'));
 	}
 });
