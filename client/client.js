@@ -310,8 +310,19 @@ $(function () {
 		players[name].find('img.clothing').remove();
 		console.log(clothing);
 		for (var i = 0; i < clothing.length; i++) {
-			console.log(findById(items, clothing[i]).file);
-			players[name].append($('<img src="/content/items/' + findById(items, clothing[i]).file + '" class="clothing">'));
+			var item = findById(items, clothing[i]);
+			var offset = {};
+
+			if (item.offset) {
+				if (item.offset.left) {
+					offset.left = item.offset.left;
+				}
+				if (item.offset.top) {
+					offset.top = item.offset.top;
+				}
+			}
+
+			players[name].append($('<img src="/content/items/' + item.file + '" class="clothing">').css(offset));
 		}
 	}
 	function fillInventory() {
