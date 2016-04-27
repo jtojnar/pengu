@@ -1,8 +1,7 @@
 {
 	"plaza": {
 		"layers": [
-			{"id": "background", "file": "plaza-narozeniny10-after.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0},
-			{"id": "box", "file": "bomba-after.png", "width": 51, "height": 28, "x": 448, "y": 472, "z": 0, "item": 6}
+			{"id": "background", "file": "plaza.png", "width": 800, "height": 600, "x": 0, "y": 0, "z": 0}
 		],
 		"spawn": {"_class": "Point", "x": 270, "y": 370},
 		"zones": [
