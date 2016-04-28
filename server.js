@@ -13,14 +13,6 @@ let poly = require('./poly');
 let Point = poly.Point;
 let Line = poly.Line;
 let pengu = require('./pengu');
-let openid = require('openid');
-let relyingParty = new openid.RelyingParty(
-	process.env.OPENID_VERIFY,
-	process.env.OPENID_REALM, // Realm (optional, specifies realm for OpenID authentication)
-	true, // Use stateless verification
-	false, // Strict mode
-	[new openid.AttributeExchange()] // List of extensions to enable and include
-);
 
 
 Object.prototype.removeItem = function(key) {
@@ -78,36 +70,11 @@ app.get('/', function(req, res) {
 	}
 });
 
-app.get('/authenticate', function(req, res) {
-	let identifier = process.env.OPENID_PROVIDER;
-
-	// Resolve identifier, associate, and build authentication URL
-	relyingParty.authenticate(identifier, false, function(error, authUrl) {
-		if (error) {
-			res.statusCode = 403;
-			res.end('Authentication failed: ' + error.message);
-		} else if (!authUrl) {
-			res.statusCode = 403;
-			res.end('Authentication failed');
-		} else {
-			res.redirect(authUrl);
-		}
-	});
-});
-
-app.all('/verify', function(req, res) {
-	relyingParty.verifyAssertion(req, function(error, result) {
-		if (!error && result.authenticated) {
-			console.log(result);
-			req.session.user = result.name;
-			req.session.group = result.group;
-			res.redirect('/');
-		} else {
-			res.statusCode = 500;
-			res.end('Kolo se nám polámalo');
-		}
-	});
-});
+if (process.env.OPENID_PROVIDER) {
+	require('./auth/openid')(app, process.env.OPENID_VERIFY, process.env.OPENID_REALM, process.env.OPENID_PROVIDER);
+} else {
+	require('./auth/simple')(app);
+}
 
 let server = http.createServer(app).listen(app.get('port'));
 console.log('Started app on port %d', app.get('port'));
