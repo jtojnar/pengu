@@ -398,7 +398,9 @@ $(function () {
 				for (var i = 0; i < zonedata[0].points.length; i++) {
 					ctx.lineTo(zonedata[0].points[i].x, zonedata[0].points[i].y);
 				}
-				ctx.lineTo(zonedata[0].points[0].x, zonedata[0].points[0].y);
+				if (zonedata[0]._class === 'Polygon') {
+					ctx.lineTo(zonedata[0].points[0].x, zonedata[0].points[0].y);
+				}
 				ctx.stroke();
 				ctx.closePath();
 			}

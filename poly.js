@@ -1,16 +1,16 @@
 "use strict";
-function Polygon() {
-	if(arguments.length == 1 && arguments[0]._class == 'Polygon') {
+function Polyline() {
+	if(arguments.length == 1 && arguments[0]._class == 'Polyline') {
 		this.points = arguments[0].points;
 	} else {
 		this.points = arguments;
 	}
 	if(this.points.length < 3) {
-		throw new Error('Polygon requires at least 3 points');
+		throw new Error('Polyline requires at least 3 points');
 	}
 	return this;
 }
-Polygon.prototype.containsPoint = function(point) {
+Polyline.prototype.containsPoint = function(point) {
 	if(!point instanceof Point) {
 		throw new Error('point isn’t instance of Point');
 	}
@@ -24,10 +24,10 @@ Polygon.prototype.containsPoint = function(point) {
 	}
 	return c;
 }
-Polygon.prototype.getIntersections = function(line) {
-	var lastCoords = this.points[this.points.length-1];
+Polyline.prototype.getIntersections = function(line) {
+	var lastCoords = this.points[0];
 	var intersections = [];
-	for(var i = 0; i < this.points.length; i++) {
+	for (var i = 1; i < this.points.length; i++) {
 		var coords = this.points[i];
 		var currentLine = new Line(lastCoords, coords);
 		var inter = line.getIntersection(currentLine);
@@ -37,6 +37,23 @@ Polygon.prototype.getIntersections = function(line) {
 	return intersections;
 }
 
+function Polygon() {
+	if (arguments.length == 1 && arguments[0]._class == 'Polygon') {
+		this.points = arguments[0].points;
+	} else {
+		this.points = arguments;
+	}
+
+	if (this.points.length < 2) {
+		throw new Error('Polyline requires at least 2 points');
+	}
+
+	this.points.push(this.points[0]);
+
+	return this;
+}
+Polygon.prototype.containsPoint = Polyline.prototype.containsPoint;
+Polygon.prototype.getIntersections = Polyline.prototype.getIntersections;
 
 function Line() {
 	this.start = arguments[0];
@@ -95,5 +112,6 @@ Point.prototype.getDistance = function(point) {
 }
 
 exports.Point = Point;
-exports.Polygon = Polygon;
+exports.Polyline = Polyline;
 exports.Line = Line;
+exports.Polygon = Polygon;
