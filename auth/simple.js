@@ -6,7 +6,8 @@ module.exports = function(app) {
 			req.session.group = 'basic';
 			res.redirect('/');
 		} else {
-			res.end(`
+			res.set('Content-Type', 'text/html');
+			res.send(`
 				<meta charset="utf-8">
 				<form action="" method="get">
 				<label>Přezdívka: <input type="text" name="name"></label>
