@@ -199,7 +199,7 @@ canvas {
 	top: 45px;
 	width: 240px;
 	height: 350px;
-	overflow: scroll;
+	overflow: auto;
 }
 
 .dialogue-inner p {

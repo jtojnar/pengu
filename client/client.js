@@ -41,7 +41,6 @@ $(function () {
 
 	var log = $('<div class="log dialogue"><h2 class="dialogue-header">Záznam chatu</h2><a href="#" class="close">×</a><div class="dialogue-inner"></div></div>');
 	view.append(log);
-	$('.log .dialogue-inner').vertiscroll({ width: 5, color: '#f07', footer: 0 });
 	log.hide();
 	$('.log').click(function stopPropagation(e) {
 		e.preventDefault();
@@ -58,7 +57,6 @@ $(function () {
 
 	var inventory = $('<div class="inventory dialogue"><h2 class="dialogue-header">Šatník</h2><a href="#" class="close">×</a><div class="dialogue-inner"></div></div>');
 	view.append(inventory);
-	$('.inventory .dialogue-inner').vertiscroll({ width: 5, color: '#f07', footer: 0 });
 	itemsLoaded.done(fillInventory);
 	$('.inventory .dialogue-inner').delegate('img', 'click', function inventoryItemClicked(e) {
 		connection.send(JSON.stringify({type: 'dress', itemId: $(this).attr('data-item')}));
@@ -334,7 +332,6 @@ $(function () {
 				$('.inventory .dialogue-inner').append(item);
 			}
 		}
-		$('.inventory .dialogue-inner').vertiscroll({ width: 5, color: '#f07' });
 	}
 
 	function loadRoom() {
