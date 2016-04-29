@@ -1,7 +1,7 @@
 {
 	"name": "pengu",
 	"description": "simple html5 chat resembling club penguin",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"private": true,
 	"dependencies": {
 		"cookie-parser": "^1.4.1",
