@@ -98,8 +98,8 @@ function getTarget(room, line) {
 	let intersections = [];
 	for (let i = room.zones.length - 1; i >= 0; i--) {
 		let zone = room.zones[i];
-		if (zone[1] === 'floor' || zone[1] === 'obstacle') {
-			intersections.pushArray(zone[0].getIntersections(line));
+		if (zone.type[0] === 'floor' || zone.type[0] === 'obstacle') {
+			intersections.pushArray(zone.area.getIntersections(line));
 		}
 	}
 	let target;
@@ -221,15 +221,15 @@ pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
 							let name = connection.name;
 							let room = players[name].room;
 							let target = getTarget(rooms[room], new Line(new Point(players[name].x, players[name].y), new Point(json.x, json.y)));
-							if (rooms[room].zones[0][0].containsPoint(target)) {
+							if (rooms[room].zones[0].area.containsPoint(target)) {
 								console.log('Moving ' + name + ' to ' + target);
 								players[name].x = target.x;
 								players[name].y = target.y;
 								players[name].room = players[name].room;
 								for (let i = 0; i < rooms[room].zones.length; i++) {
 									let zone = rooms[room].zones[i];
-									if (zone[1] === 'door' && zone[0].containsPoint(target)) {
-										room = travel = zone[2];
+									if (zone.type[0] === 'door' && zone.area.containsPoint(target)) {
+										room = travel = zone.type[1];
 										console.log(name + ' goes to ' + travel);
 										players[name].room = travel;
 										break;

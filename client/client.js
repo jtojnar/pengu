@@ -390,13 +390,13 @@ $(function () {
 			for (var zonedata in map[myRoom].zones) {
 				var zonedata = map[myRoom].zones[zonedata];
 				ctx.beginPath();
-				ctx.strokeStyle = {floor: '#a6d924', door: '#a924d9', obstacle: '#d92463', sound: '#0075ff', animate: '#ffd200'}[zonedata[1]];
-				ctx.moveTo(zonedata[0].points[0].x, zonedata[0].points[0].y);
-				for (var i = 0; i < zonedata[0].points.length; i++) {
-					ctx.lineTo(zonedata[0].points[i].x, zonedata[0].points[i].y);
+				ctx.strokeStyle = {floor: '#a6d924', door: '#a924d9', obstacle: '#d92463', sound: '#0075ff', animate: '#ffd200'}[zonedata.type[0]];
+				ctx.moveTo(zonedata.area.points[0].x, zonedata.area.points[0].y);
+				for (var i = 0; i < zonedata.area.points.length; i++) {
+					ctx.lineTo(zonedata.area.points[i].x, zonedata.area.points[i].y);
 				}
-				if (zonedata[0]._class === 'Polygon') {
-					ctx.lineTo(zonedata[0].points[0].x, zonedata[0].points[0].y);
+				if (zonedata.area._class === 'Polygon') {
+					ctx.lineTo(zonedata.area.points[0].x, zonedata.area.points[0].y);
 				}
 				ctx.stroke();
 				ctx.closePath();
