@@ -43,7 +43,6 @@
 	},
 	{
 		"id": 7,
-		"available": true,
 		"title": "Sobí parohy",
 		"type": "head",
 		"tags": ["raindeer", "brown", "holiday", "christmas"],
@@ -51,7 +50,6 @@
 	},
 	{
 		"id": 8,
-		"available": true,
 		"title": "Červený nos",
 		"type": "face",
 		"tags": ["raindeer", "red", "holiday", "christmas"],
