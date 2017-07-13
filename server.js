@@ -140,7 +140,8 @@ let rooms = JSON.parse(require('fs').readFileSync(path.join(__dirname, 'content/
 let items = JSON.parse(require('fs').readFileSync(path.join(__dirname, '/content/items/items.json'), 'utf8'));
 
 let dbEnabled = true;
-pg.connect(_dbUri, function connectToDb(err, pgclient, pgdone) {
+var pgpool = new pg.Pool({connectionString: _dbUri});
+pgpool.connect(function connectToDb(err, pgclient, pgdone) {
 	if (err) {
 		pgdone();
 		console.error('Couldn\'t connect to database, data aren\'t persitent', err);

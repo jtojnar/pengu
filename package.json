@@ -4,21 +4,21 @@
 	"version": "0.0.7",
 	"private": true,
 	"dependencies": {
-		"cookie-parser": "^1.4.1",
+		"cookie-parser": "^1.4.2",
 		"express": "^4.13.4",
 		"express-session": "^1.13.0",
 		"morgan": "^1.7.0",
 		"openid": "^2.0.0",
-		"pg": "^4.5.3",
+		"pg": "^6.4.0",
 		"serve-static": "^1.10.2",
 		"websocket": "^1.0.22",
 		"gulp": "^3.9.1",
-		"gulp-autoprefixer": "^3.1.0",
-		"gulp-csso": "^2.0.0"
+		"gulp-autoprefixer": "^4.0.0",
+		"gulp-csso": "^3.0.0"
 	},
 	"engines": {
-		"node": "5.10",
-		"npm": "^3.8"
+		"node": "^8.0.0",
+		"npm": "^5.2"
 	},
 	"scripts": {
 		"postinstall": "node node_modules/gulp/bin/gulp"
