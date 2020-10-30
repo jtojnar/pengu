@@ -30,5 +30,7 @@ pengu uses the following environment variables for configuration:
 
 * `PORT` – The port a web server will be running on. Of not specified it defaults to `8080`.
 * `DATABASE_URL` – [Connection string](https://node-postgres.com/features/connecting/#connection-uri) for the PostgreSQL database. If omitted, persistence will be missing.
+* `NODE_ENV` – Can be set to `production` for less verbose logs. Defaults to `development`.
+* `OPENID_PROVIDER` – If this is set, pengu will use OpenID to log-in. Though it only supports using a hardcoded identity specified by this variable. User will be redirected to the provider, where they will confirm their credentials, and then be redirected back to Pengu with an access code. Pengu will then verify the access code against the OpenID verification URL and realm specified by `OPENID_VERIFY`, `OPENID_REALM` environment variables.
 
 Licensed under MIT.
