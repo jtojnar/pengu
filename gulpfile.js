@@ -17,4 +17,4 @@ gulp.task('watch', function() {
 	gulp.watch('./assets/*.css', ['css']);
 });
 
-gulp.task('default', ['css']);
+gulp.task('default', gulp.parallel('css'));
