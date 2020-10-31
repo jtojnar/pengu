@@ -14,33 +14,14 @@ let Point = poly.Point;
 let Line = poly.Line;
 let pengu = require('./pengu');
 
-
-Object.prototype.removeItem = function(key) {
-	if (!this.hasOwnProperty(key)){
-		return;
-	}
-	if (isNaN(parseInt(key)) || !(this instanceof Array)) {
-		delete this[key];
-	} else {
-		this.splice(key, 1);
-	}
-};
-
-Array.prototype.getByKey = function(key, value) {
-	let cur;
-	for (let i = 0, length = this.length; i < length; i++) {
-		if (i in this) {
-			cur = this[i];
-			if (cur[key] === value) {
-				return cur;
-			}
+function findById(arr, id) {
+	for (let item of arr) {
+		if (item.id === id) {
+			return item;
 		}
 	}
-};
-
-Array.prototype.pushArray = function(arr) {
-	this.push.apply(this, arr);
-};
+	return null;
+}
 
 let app = express();
 
@@ -97,17 +78,15 @@ function originIsAllowed(origin) {
 function getTarget(room, line) {
 	let gap = 5;
 	let intersections = [];
-	for (let i = room.zones.length - 1; i >= 0; i--) {
-		let zone = room.zones[i];
+	for (let zone of room.zones) {
 		if (zone.type[0] === 'floor' || zone.type[0] === 'obstacle') {
-			intersections.pushArray(zone.area.getIntersections(line));
+			intersections.push(...zone.area.getIntersections(line));
 		}
 	}
 	let target;
 	if (intersections.length > 0){
 		let targetDistance = Infinity;
-		for (let i = intersections.length - 1; i >= 0; i--) {
-			let intersection = intersections[i];
+		for (let intersection of intersections) {
 			let distance = Math.abs(line.start.x - intersection.x);
 			if (targetDistance > distance) {
 				targetDistance = distance;
@@ -141,7 +120,7 @@ let rooms = JSON.parse(require('fs').readFileSync(path.join(__dirname, 'content/
 let items = JSON.parse(require('fs').readFileSync(path.join(__dirname, '/content/items/items.json'), 'utf8'));
 
 let dbEnabled = true;
-var pgpool = new pg.Pool({connectionString: _dbUri});
+let pgpool = new pg.Pool({connectionString: _dbUri});
 pgpool.connect(function connectToDb(err, pgclient, pgdone) {
 	if (err) {
 		pgdone();
@@ -157,8 +136,8 @@ pgpool.connect(function connectToDb(err, pgclient, pgdone) {
 	function getPenguinsFromDb(err, result) {
 		if (!err) {
 			if (result) {
-				for (let i = 0; i < result.rows.length; i++) {
-					registered[result.rows[i].name] = result.rows[i];
+				for (let row of result.rows) {
+					registered[row.name] = row;
 				}
 			}
 		} else {
@@ -213,8 +192,8 @@ pgpool.connect(function connectToDb(err, pgclient, pgdone) {
 							players[name].room = 'plaza';
 
 							console.info('Initial handshake with ' + name);
-							for (let i = 0; i < clients.length; i++) {
-								clients[i].sendUTF(JSON.stringify({type: 'enter', name: name, room: players[name].room, x: players[name].x, y: players[name].y, clothing: players[name].clothing}));
+							for (let client of clients) {
+								client.sendUTF(JSON.stringify({type: 'enter', name: name, room: players[name].room, x: players[name].x, y: players[name].y, clothing: players[name].clothing}));
 							}
 							connection.sendUTF(JSON.stringify({type: 'syncCloset', closet: players[name].closet}));
 							});
@@ -228,8 +207,7 @@ pgpool.connect(function connectToDb(err, pgclient, pgdone) {
 								players[name].x = target.x;
 								players[name].y = target.y;
 								players[name].room = players[name].room;
-								for (let i = 0; i < rooms[room].zones.length; i++) {
-									let zone = rooms[room].zones[i];
+								for (let zone of rooms[room].zones) {
 									if (zone.type[0] === 'door' && zone.area.containsPoint(target)) {
 										room = travel = zone.type[1];
 										console.log(name + ' goes to ' + travel);
@@ -243,8 +221,8 @@ pgpool.connect(function connectToDb(err, pgclient, pgdone) {
 									players[name].x = msg.newX = rooms[travel].spawn.x;
 									players[name].y = msg.newY = rooms[travel].spawn.y;
 								}
-								for (let i = 0; i < clients.length; i++) {
-									clients[i].sendUTF(JSON.stringify(msg));
+								for (let client of clients) {
+									client.sendUTF(JSON.stringify(msg));
 								}
 							}
 						} else if (json.type === 'message') {
@@ -276,8 +254,8 @@ pgpool.connect(function connectToDb(err, pgclient, pgdone) {
 								} else {
 									if (!players[name].banned) {
 										console.log(name + ' said ' + json.text);
-										for (let i = 0; i < clients.length; i++) {
-											clients[i].sendUTF(JSON.stringify({type: 'say', name: name, text: json.text}));
+										for (let client of clients) {
+											client.sendUTF(JSON.stringify({type: 'say', name: name, text: json.text}));
 										}
 									} else {
 										connection.sendUTF(JSON.stringify({type: 'say', name: name, text: json.text}));
@@ -287,7 +265,7 @@ pgpool.connect(function connectToDb(err, pgclient, pgdone) {
 						} else if (json.type === 'addItem') {
 							let name = connection.name;
 							json.itemId = parseInt(json.itemId);
-							if (!items.getByKey('id', json.itemId).available) {
+							if (!findById(items, json.itemId)?.available) {
 								connection.sendUTF(JSON.stringify({type: 'error', message: 'Tato věc nejde v současnosti získat.'}));
 								console.log(name + ' attempted to acquire ' + json.itemId);
 							} else if (!players[name].closet.hasOwnProperty(json.itemId)) {
@@ -323,8 +301,8 @@ pgpool.connect(function connectToDb(err, pgclient, pgdone) {
 										}
 									});
 								}
-								for (let i = 0; i < clients.length; i++) {
-									clients[i].sendUTF(JSON.stringify({type: 'dress', name: name, clothing: players[name].clothing}));
+								for (let client of clients) {
+									client.sendUTF(JSON.stringify({type: 'dress', name: name, clothing: players[name].clothing}));
 								}
 							}
 						}
@@ -335,16 +313,13 @@ pgpool.connect(function connectToDb(err, pgclient, pgdone) {
 				}
 			});
 			connection.on('close', function(reasonCode, description) {
-				let index = clients.indexOf(connection);
-				if (index !== -1) {
-					// remove the connection from the pool
-					clients.splice(index, 1);
-				}
+				// remove the connection from the pool
+				clients = clients.filter((client) => client !== connection);
 				registered[connection.name] = players[connection.name];
-				players.removeItem(connection.name);
+				delete players[connection.name];
 				console.log((new Date()) + ' Peer ' + connection.remoteAddress + '(' + connection.name + ') disconnected.' + (description ? ' Reason: ' + description : ''));
-				for (let i = 0; i < clients.length; i++) {
-					clients[i].sendUTF(JSON.stringify({type: 'exit', name: connection.name}));
+				for (let client of clients) {
+					client.sendUTF(JSON.stringify({type: 'exit', name: connection.name}));
 				}
 			});
 		});
