@@ -132,10 +132,6 @@ body {
 	align-items: center;
 }
 
-.overlay > .spinner {
-	self-align: center;
-}
-
 .hidden {
 	display: none;
 }
