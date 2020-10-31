@@ -19,6 +19,7 @@
 	},
 	"scripts": {
 		"dev": "npm run --prefix assets/ dev",
+		"heroku-prebuild": "npm run install-dependencies",
 		"build": "npm run --prefix assets/ build",
 		"install-dependencies": "npm install --production=false --prefix assets/",
 		"postinstall": "npm run install-dependencies && npm run build"
