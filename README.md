@@ -15,9 +15,11 @@ Optionally, you will also need [PostgreSQL](https://www.postgresql.org/) databas
 ```
 CREATE TABLE "penguin" (
 	"name" character varying NOT NULL PRIMARY KEY,
-	"closet" json DEFAULT '[]' NOT NULL,
+	"closet" json DEFAULT '{}' NOT NULL,
 	"clothing" json DEFAULT '[]' NOT NULL,
-	"registered" timestamptz DEFAULT current_timestamp NOT NULL
+	"registered" timestamptz DEFAULT current_timestamp NOT NULL,
+	"banned" boolean DEFAULT false NOT NULL,
+	"group" character varying DEFAULT 'basic' NOT NULL
 );
 ```
 
