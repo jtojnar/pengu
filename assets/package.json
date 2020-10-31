@@ -1,0 +1,20 @@
+{
+	"dependencies": {
+		"@babel/runtime": "^7.12.1",
+		"jsx-dom": "^6.4.19"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.11.6",
+		"@babel/plugin-transform-runtime": "^7.12.1",
+		"@babel/preset-react": "^7.10.4",
+		"autoprefixer": "^9.8.6",
+		"babel-eslint": "^10.0.3",
+		"eslint": "^6.5.1",
+		"eslint-plugin-react": "^7.20.6",
+		"parcel-bundler": "^1.12.3"
+	},
+	"scripts": {
+		"dev": "parcel watch index.html -d ../client/ --public-url ./",
+		"build": "parcel build index.html -d ../client/ --public-url ./"
+	}
+}

@@ -7,9 +7,6 @@
 		"cookie-parser": "^1.4.2",
 		"express": "^4.13.4",
 		"express-session": "^1.13.0",
-		"gulp": "^4.0",
-		"gulp-autoprefixer": "^7.0.0",
-		"gulp-csso": "^4.0.0",
 		"morgan": "^1.7.0",
 		"openid": "^2.0.0",
 		"pg": "^8.4.0",
@@ -21,6 +18,9 @@
 		"npm": "^7.0"
 	},
 	"scripts": {
-		"postinstall": "node node_modules/gulp/bin/gulp"
+		"dev": "npm run --prefix assets/ dev",
+		"build": "npm run --prefix assets/ build",
+		"install-dependencies": "npm install --production=false --prefix assets/",
+		"postinstall": "npm run install-dependencies && npm run build"
 	}
 }

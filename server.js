@@ -45,9 +45,6 @@ Array.prototype.pushArray = function(arr) {
 let app = express();
 
 app.set('port', process.env.PORT || 8080);
-let serveStatic = require('serve-static');
-app.use('/content', serveStatic(path.join(__dirname, 'content')));
-app.use('/client', serveStatic(path.join(__dirname, 'client')));
 
 let session = require('express-session');
 let signedCookie = require('cookie-parser').signedCookie;
@@ -66,9 +63,13 @@ app.get('/', function(req, res) {
 		res.redirect('/authenticate');
 	} else {
 		res.statusCode = 200;
-		res.sendFile(path.join(__dirname, 'client.html'));
+		res.sendFile(path.join(__dirname, 'client/index.html'));
 	}
 });
+
+let serveStatic = require('serve-static');
+app.use('/content', serveStatic(path.join(__dirname, 'content')));
+app.use('/', serveStatic(path.join(__dirname, 'client')));
 
 if (process.env.OPENID_PROVIDER) {
 	require('./auth/openid')(app, process.env.OPENID_VERIFY, process.env.OPENID_REALM, process.env.OPENID_PROVIDER);

@@ -34,7 +34,7 @@ body {
 	margin-top: -50px;
 	top: 50%;
 	left: 50%;
-	background: transparent url(/content/penguin/black-small.png) no-repeat;
+	background-repeat: no-repeat;
 }
 .penguin img {
 	bottom: 0;
@@ -55,7 +55,6 @@ body {
 }
 .penguin .message {
 	z-index: 26;
-	display: none;
 	position: absolute;
 	bottom: 5em;
 	left: -24px;
@@ -119,7 +118,7 @@ body {
 	flex: 1 1 auto;
 }
 
-#overlay {
+.overlay {
 	z-index: 999999;
 	background-color: #e2e2e2;
 	background: linear-gradient(to bottom, #e2e2e2 0%, #dbdbdb 26%, #d1d1d1 55%, #fefefe 100%);
@@ -133,8 +132,12 @@ body {
 	align-items: center;
 }
 
-#overlay > .spinner {
+.overlay > .spinner {
 	self-align: center;
+}
+
+.hidden {
+	display: none;
 }
 
 /* http://www.designcouch.com/home/why/2013/05/23/dead-simple-pure-css-loading-spinner/ */
