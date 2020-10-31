@@ -18,6 +18,7 @@
 		"npm": "^7.0"
 	},
 	"scripts": {
+		"start": "node server.js",
 		"dev": "npm run --prefix assets/ dev",
 		"heroku-prebuild": "npm run install-dependencies",
 		"build": "npm run --prefix assets/ build",
