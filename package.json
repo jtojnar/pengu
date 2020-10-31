@@ -1,6 +1,6 @@
 {
 	"name": "pengu",
-	"description": "simple html5 chat resembling club penguin",
+	"description": "Simple HTML 5 chat resembling Club Penguin",
 	"version": "0.0.7",
 	"private": true,
 	"dependencies": {
@@ -20,14 +20,10 @@
 	"scripts": {
 		"start": "node server.js",
 		"dev": "npm run --prefix assets/ dev",
-		"heroku-prebuild": "npm run install-dependencies",
 		"build": "npm run --prefix assets/ build",
-		"heroku-cleanup": "rm -rf assets/.cache assets/node_modules",
-		"install-dependencies": "npm install --production=false --prefix assets/",
-		"postinstall": "npm run install-dependencies && npm run build"
+		"postinstall": "npm run build"
 	},
-	"cacheDirectories": [
-		"assets/node_modules",
-		"node_modules"
+	"workspaces": [
+		"assets"
 	]
 }

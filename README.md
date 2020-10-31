@@ -1,6 +1,6 @@
 # pengu
 
-**pengu** is lightweight web chat built with HTML5 resembling Club Penguin.
+**pengu** is lightweight web chat built with HTML 5 resembling Club Penguin.
 
 ## Prerequisites
 
