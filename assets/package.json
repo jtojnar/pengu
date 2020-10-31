@@ -1,4 +1,7 @@
 {
+	"name": "pengu-assets",
+	"version": "0.0.0",
+	"private": true,
 	"dependencies": {
 		"@babel/runtime": "^7.12.1",
 		"jsx-dom": "^6.4.19"
