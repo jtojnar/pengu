@@ -148,9 +148,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById('toggleMusic').addEventListener('click', function toggleMusic(e) {
 		audio.muted = !audio.muted;
 		if (audio.muted) {
-			this.querySelector('img').setAttribute('src', require('../images/unmute-button.png'));
+			this.querySelector('img').setAttribute('src', require('url:../images/unmute-button.png'));
 		} else {
-			this.querySelector('img').setAttribute('src', require('../images/mute-button.png'));
+			this.querySelector('img').setAttribute('src', require('url:../images/mute-button.png'));
 		}
 		e.preventDefault();
 		e.stopPropagation();
