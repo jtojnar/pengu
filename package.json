@@ -20,8 +20,7 @@
 	"scripts": {
 		"start": "node server.js",
 		"dev": "npm run --prefix assets/ dev",
-		"build": "npm run --prefix assets/ build",
-		"postinstall": "npm run build"
+		"build": "npm run --prefix assets/ build"
 	},
 	"workspaces": [
 		"assets"

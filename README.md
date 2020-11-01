@@ -23,8 +23,9 @@ CREATE TABLE "penguin" (
 );
 ```
 
-2. Run `npm install`
-3. Start with `npm start`, the game will run on port set by `PORT` env variable.
+2. Run `npm install`.
+3. Compile assets using `npm run build`.
+4. Start with `npm start`, the game will run on port set by `PORT` env variable.
 
 ## Configuration
 
