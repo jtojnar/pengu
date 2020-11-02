@@ -184,8 +184,8 @@ async function runApp() {
 						json.text = json.text.trim();
 						if (json.text !== '') {
 							let name = connection.name;
-							if (json.text.indexOf('/') === 0) {
-								if (json.text.indexOf('/mute ') === 0 && ['admin', 'moderator'].indexOf(players[name].group) > -1) {
+							if (json.text.startsWith('/')) {
+								if (json.text.startsWith('/mute ') && ['admin', 'moderator'].includes(players[name].group)) {
 									let bannedName = json.text.substr(6);
 									players[bannedName].banned = true;
 									if (dbEnabled) {
@@ -195,7 +195,7 @@ async function runApp() {
 											console.log(err);
 										}
 									}
-								} else if (json.text.indexOf('/unmute ') === 0 && ['admin', 'moderator'].indexOf(players[name].group) > -1) {
+								} else if (json.text.startsWith('/unmute ') && ['admin', 'moderator'].includes(players[name].group)) {
 									let bannedName = json.text.substr(8);
 									players[bannedName].banned = false;
 									if (dbEnabled) {
@@ -242,8 +242,8 @@ async function runApp() {
 						let name = connection.name;
 						json.itemId = parseInt(json.itemId);
 						if (players[name].closet.hasOwnProperty(json.itemId)) {
-							if (players[name].clothing.indexOf(json.itemId) > -1) {
-								players[name].clothing.splice(players[name].clothing.indexOf(json.itemId), 1);
+							if (players[name].clothing.includes(json.itemId)) {
+								players[name].clothing = players[name].clothing.filter(item => item !== json.itemId);
 								console.log(name + ' undressed ' + json.itemId);
 							} else {
 								players[name].clothing.push(json.itemId);
