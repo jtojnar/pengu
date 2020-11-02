@@ -2,7 +2,6 @@
 'use strict';
 
 process.title = 'pengu';
-let _dbUri = process.env.DATABASE_URL;
 
 const { server: WebSocketServer } = require('websocket');
 const http = require('http');
@@ -88,10 +87,12 @@ async function runApp() {
 	});
 	let items = JSON.parse(fs.readFileSync(path.join(__dirname, '../content/items/items.json'), 'utf8'));
 
+	let _dbUri = process.env.DATABASE_URL;
 	let dbEnabled = _dbUri !== null;
-	let pgpool = new pg.Pool({connectionString: _dbUri});
+	let pgpool = null;
 	let registered = {};
 	if (dbEnabled) {
+		pgpool = new pg.Pool({connectionString: _dbUri});
 		let result = await pgpool.query('select * from "penguin"');
 		for (let row of result.rows) {
 			registered[row.name] = row;
