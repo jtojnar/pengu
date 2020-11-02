@@ -1,4 +1,7 @@
-import React from 'jsx-dom';
+import React from 'jsx-dom'; // eslint-disable-line no-unused-vars
+
+import muteIcon from 'url:../images/mute-button.png';
+import unmuteIcon from 'url:../images/unmute-button.png';
 
 function removeItemNamed(object, key) {
 	if (!Object.keys(object).includes(key)){
@@ -66,17 +69,17 @@ document.addEventListener('DOMContentLoaded', () => {
 	);
 	view.appendChild(log);
 	log.classList.add('hidden');
-	document.querySelector('.log').addEventListener('click', function stopPropagation(e) {
-		e.preventDefault();
-		e.stopPropagation();
+	document.querySelector('.log').addEventListener('click', function stopPropagation(event) {
+		event.preventDefault();
+		event.stopPropagation();
 	});
-	document.querySelector('.log .close').addEventListener('click', function hideLog(e) {
+	document.querySelector('.log .close').addEventListener('click', function hideLog() {
 		this.parentNode.classList.add('hidden');
 	});
-	document.getElementById('toggleLog').addEventListener('click', function toggleLog(e) {
+	document.getElementById('toggleLog').addEventListener('click', function toggleLog(event) {
 		document.querySelector('.log').classList.toggle('hidden');
-		e.preventDefault();
-		e.stopPropagation();
+		event.preventDefault();
+		event.stopPropagation();
 	});
 
 	const inventory = (
@@ -90,17 +93,17 @@ document.addEventListener('DOMContentLoaded', () => {
 	itemsLoaded.then(fillInventory);
 	inventory.classList.add('hidden');
 
-	document.querySelector('.inventory').addEventListener('click', function stopPropagation(e) {
-		e.preventDefault();
-		e.stopPropagation();
+	document.querySelector('.inventory').addEventListener('click', function stopPropagation(event) {
+		event.preventDefault();
+		event.stopPropagation();
 	});
-	document.querySelector('.inventory .close').addEventListener('click', function hideInventory(e) {
+	document.querySelector('.inventory .close').addEventListener('click', function hideInventory() {
 		this.parentNode.classList.add('hidden');
 	});
-	document.getElementById('toggleInventory').addEventListener('click', function toggleInventory(e) {
+	document.getElementById('toggleInventory').addEventListener('click', function toggleInventory(event) {
 		document.querySelector('.inventory').classList.toggle('hidden');
-		e.preventDefault();
-		e.stopPropagation();
+		event.preventDefault();
+		event.stopPropagation();
 	});
 
 	/** Currently dragged dialogue element. */
@@ -108,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	/** Position of the mouse cursor from the top-left of the dragged dialogue. */
 	let dragOffset = {top: 0, left: 0};
 
-	document.body.addEventListener('mousemove', function(e) {
+	document.body.addEventListener('mousemove', function(event) {
 		if (draggedDialogue) {
 			const viewRect = view.getBoundingClientRect();
 			// Bounding rectangle is relative to the viewport so we need to correct it by scroll offset.
@@ -116,14 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
 				top: viewRect.top + window.scrollY,
 				left: viewRect.left + window.scrollX,
 			};
-			draggedDialogue.style.top = (e.pageY - viewOffset.top - dragOffset.top) + 'px';
-			draggedDialogue.style.left = (e.pageX - viewOffset.left - dragOffset.left) + 'px';
+			draggedDialogue.style.top = (event.pageY - viewOffset.top - dragOffset.top) + 'px';
+			draggedDialogue.style.left = (event.pageX - viewOffset.left - dragOffset.left) + 'px';
 		}
 	});
 
 
 	document.querySelectorAll('.dialogue-header').forEach((header) => {
-		header.addEventListener('mousedown', function(e) {
+		header.addEventListener('mousedown', function(event) {
 			// Parent node with class .dialogue
 			draggedDialogue = header.parentNode;
 
@@ -135,25 +138,25 @@ document.addEventListener('DOMContentLoaded', () => {
 			};
 
 			dragOffset = {
-				top: e.pageY - offset.top,
-				left: e.pageX - offset.left
+				top: event.pageY - offset.top,
+				left: event.pageX - offset.left
 			};
 		});
 	});
 
-	document.body.addEventListener('mouseup', function(e) {
+	document.body.addEventListener('mouseup', function() {
 		draggedDialogue = null;
 	});
 
-	document.getElementById('toggleMusic').addEventListener('click', function toggleMusic(e) {
+	document.getElementById('toggleMusic').addEventListener('click', function toggleMusic(event) {
 		audio.muted = !audio.muted;
 		if (audio.muted) {
-			this.querySelector('img').setAttribute('src', require('url:../images/unmute-button.png'));
+			this.querySelector('img').setAttribute('src', unmuteIcon);
 		} else {
-			this.querySelector('img').setAttribute('src', require('url:../images/mute-button.png'));
+			this.querySelector('img').setAttribute('src', muteIcon);
 		}
-		e.preventDefault();
-		e.stopPropagation();
+		event.preventDefault();
+		event.stopPropagation();
 	});
 
 	let myLayers = [];
@@ -181,21 +184,21 @@ document.addEventListener('DOMContentLoaded', () => {
 			items = itemsData;
 			itemsLoadedResolve();
 			loadRoom();
-		} catch (e) {
+		} catch (error) {
 			alert('Načítání selhalo. Zkus prosím obnovit stránku.');
-			console.trace(e);
+			console.trace(error);
 		}
 	};
 
-	connection.onclose = function(e) {
+	connection.onclose = function(event) {
 		clearInterval(socketMonitor);
-		alert(e.reason);
-		if (e.code === 4001 || e.code === 4002) {
+		alert(event.reason);
+		if (event.code === 4001 || event.code === 4002) {
 			window.location.href = '/';
 		}
 	};
 
-	connection.onerror = function (error) {
+	connection.onerror = function () {
 		view.innerHTML = <p>Promiň, nefunguje server nebo tvé připojení.</p>;
 	};
 
@@ -207,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		let json;
 		try {
 			json = JSON.parse(message.data);
-		} catch (e) {
+		} catch (error) {
 			console.log('This doesn\'t look like a valid JSON: ', message.data);
 			return;
 		}
@@ -262,20 +265,20 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	};
 
-	view.addEventListener('click', function(e) {
+	view.addEventListener('click', function(event) {
 		const rect = view.getBoundingClientRect();
 		// Bounding rectangle is relative to the viewport so we need to correct it by scroll offset.
 		const offset = {
 			top: rect.top + window.scrollY,
 			left: rect.left + window.scrollX,
 		};
-		connection.send(JSON.stringify({type: 'move', x: e.pageX - offset.left, y: e.pageY - offset.top}));
+		connection.send(JSON.stringify({type: 'move', x: event.pageX - offset.left, y: event.pageY - offset.top}));
 	});
 
 	const messageBar = document.getElementById('message');
-	messageBar.addEventListener('keydown', function(e) {
+	messageBar.addEventListener('keydown', function(event) {
 		let message = messageBar.value.trim();
-		if (e.keyCode === 13 && message !== '') {
+		if (event.keyCode === 13 && message !== '') {
 			connection.send(JSON.stringify({type: 'message', text: message}));
 			messageBar.value = '';
 		}
@@ -415,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 	function fillInventory() {
-		document.querySelectorAll('.inventory .dialogue-inner img').forEach((item) => item.remove());;
+		document.querySelectorAll('.inventory .dialogue-inner img').forEach((item) => item.remove());
 		for (let itemId of Object.keys(myCloset)) {
 			let itemData = findById(items, parseInt(itemId));
 			let item = (
@@ -426,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					alt=""
 					title={itemData.title}
 					data-item={itemData.id}
-					onClick={(e) => {
+					onClick={() => {
 						connection.send(JSON.stringify({type: 'dress', itemId: itemData.id}));
 					}}
 				/>
@@ -455,7 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			};
 			const layer = <img class="layer" style={style} />;
 
-			let p = new Promise((resolve, reject) => {
+			let p = new Promise((resolve) => {
 				layer.addEventListener('load', resolve);
 				layer.addEventListener('error', resolve);
 			});
@@ -470,12 +473,12 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (layerdata.item) {
 				layer.classList.add('item');
 				layer.setAttribute('data-item', layerdata.item);
-				layer.addEventListener('click', (e) => {
+				layer.addEventListener('click', (event) => {
 					const itemId = layerdata.item;
 					if (confirm('Opravdu chceš získat ' + findById(items, parseInt(itemId)).title)) {
 						connection.send(JSON.stringify({type: 'addItem', itemId: itemId}));
 					}
-					e.stopPropagation();
+					event.stopPropagation();
 				});
 			}
 

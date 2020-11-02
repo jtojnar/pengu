@@ -44,10 +44,10 @@ async function runApp() {
 
 	app.get('/', function(req, res) {
 		if (!req.session.user) {
-				res.redirect('/authenticate');
+			res.redirect('/authenticate');
 		} else {
-				res.statusCode = 200;
-				res.sendFile(path.join(__dirname, '../client/index.html'));
+			res.statusCode = 200;
+			res.sendFile(path.join(__dirname, '../client/index.html'));
 		}
 	});
 
@@ -69,7 +69,7 @@ async function runApp() {
 		autoAcceptConnections: false
 	});
 
-	function originIsAllowed(origin) {
+	function originIsAllowed() {
 		return true;
 	}
 
@@ -153,28 +153,27 @@ async function runApp() {
 							throw err;
 						}
 					} else if (json.type === 'move') {
-						let travel = false;
+						let newRoom = null;
 						let name = connection.name;
-						let room = players[name].room;
-						let target = mapUtils.getTarget(rooms[room], new Line(new Point(players[name].x, players[name].y), new Point(json.x, json.y)));
-						if (rooms[room].zones[0].area.containsPoint(target)) {
+						let currentRoom = players[name].room;
+						let target = mapUtils.getTarget(rooms[currentRoom], new Line(new Point(players[name].x, players[name].y), new Point(json.x, json.y)));
+						if (rooms[currentRoom].zones[0].area.containsPoint(target)) {
 							console.log('Moving ' + name + ' to ' + target);
 							players[name].x = target.x;
 							players[name].y = target.y;
-							players[name].room = players[name].room;
-							for (let zone of rooms[room].zones) {
+							for (let zone of rooms[currentRoom].zones) {
 								if (zone.type[0] === 'door' && zone.area.containsPoint(target)) {
-									room = travel = zone.type[1];
-									console.log(name + ' goes to ' + travel);
-									players[name].room = travel;
+									newRoom = zone.type[1];
+									console.log(name + ' goes to ' + newRoom);
+									players[name].room = newRoom;
 									break;
 								}
 							}
 							let msg = {type: 'move', name: name, x: players[name].x, y: players[name].y};
-							if (travel) {
-								msg.travel = travel;
-								players[name].x = msg.newX = rooms[travel].spawn.x;
-								players[name].y = msg.newY = rooms[travel].spawn.y;
+							if (newRoom) {
+								msg.travel = newRoom;
+								players[name].x = msg.newX = rooms[newRoom].spawn.x;
+								players[name].y = msg.newY = rooms[newRoom].spawn.y;
 							}
 							for (let client of clients) {
 								client.sendUTF(JSON.stringify(msg));
@@ -223,7 +222,7 @@ async function runApp() {
 						if (!findById(items, json.itemId)?.available) {
 							connection.sendUTF(JSON.stringify({type: 'error', message: 'Tato věc nejde v současnosti získat.'}));
 							console.log(name + ' attempted to acquire ' + json.itemId);
-						} else if (!players[name].closet.hasOwnProperty(json.itemId)) {
+						} else if (!Object.keys(players[name].closet).includes(`${json.itemId}`)) {
 							players[name].closet[json.itemId] = {'date': new Date(), 'means': 'collect'};
 							if (dbEnabled) {
 								try {
@@ -241,7 +240,7 @@ async function runApp() {
 					} else if (json.type === 'dress') {
 						let name = connection.name;
 						json.itemId = parseInt(json.itemId);
-						if (players[name].closet.hasOwnProperty(json.itemId)) {
+						if (Object.keys(players[name].closet).includes(`${json.itemId}`)) {
 							if (players[name].clothing.includes(json.itemId)) {
 								players[name].clothing = players[name].clothing.filter(item => item !== json.itemId);
 								console.log(name + ' undressed ' + json.itemId);
@@ -279,7 +278,7 @@ async function runApp() {
 		});
 	});
 
-	function exitHandler(options) {
+	function exitHandler() {
 		console.log('Server is going down');
 		for (let client of clients) {
 			client.drop(pengu.SERVER_GOING_DOWN, 'Server is going down');

@@ -1,8 +1,12 @@
 {
+	"extends": [
+		"eslint:recommended"
+	],
 	"rules": {
-		"semi": 2,
-		"quotes": [2, "single", "avoid-escape"],
-		"no-underscore-dangle": 0
+		"indent": ["error", "tab"],
+		"semi": "error",
+		"quotes": ["error", "single", "avoid-escape"],
+		"no-underscore-dangle": "off"
 	},
 	"env": {
 		"es2020": true,
