@@ -65,7 +65,6 @@ async function runApp() {
 
 	let wsServer = new WebSocketServer({
 		httpServer: server,
-		port: 1337,
 		autoAcceptConnections: false
 	});
 
