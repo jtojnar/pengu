@@ -35,6 +35,7 @@ pengu uses the following environment variables for configuration:
 * `DATABASE_URL` – [Connection string](https://node-postgres.com/features/connecting/#connection-uri) for the PostgreSQL database. If omitted, persistence will be missing.
 * `NODE_ENV` – Can be set to `production` for less verbose logs. Defaults to `development`.
 * `OPENID_PROVIDER` – If this is set, pengu will use OpenID to log-in. Though it only supports using a hardcoded identity specified by this variable. User will be redirected to the provider, where they will confirm their credentials, and then be redirected back to Pengu with an access code. Pengu will then verify the access code against the OpenID verification URL and realm specified by `OPENID_VERIFY`, `OPENID_REALM` environment variables.
+* `ACCEPTED_ORIGINS` – comma-separated list of domain names that are allowed to access the WebSockets server. This is necessary to prevent [cross-site request forgery](https://en.wikipedia.org/wiki/WebSocket#Security_considerations). When the environment variable is not set, only `localhost` and `127.0.0.1` will be allowed to connect.
 
 ## Development
 

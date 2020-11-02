@@ -28,6 +28,8 @@ function findById(arr, id) {
 	return null;
 }
 
+const acceptedOrigins = process.env.ACCEPTED_ORIGINS ? process.env.ACCEPTED_ORIGINS.split(',') : ['localhost', '127.0.0.1'];
+
 async function runApp() {
 	let app = express();
 
@@ -68,8 +70,9 @@ async function runApp() {
 		autoAcceptConnections: false
 	});
 
-	function originIsAllowed() {
-		return true;
+	function originIsAllowed(origin) {
+		const url = new URL(origin);
+		return acceptedOrigins.includes(url.hostname);
 	}
 
 	let clients = [];
