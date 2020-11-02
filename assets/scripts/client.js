@@ -171,7 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		return;
 	}
 
-	let connection = new WebSocket('ws://' + window.location.hostname + (window.location.port === '' ? '' : ':' + window.location.port));
+	const protocol = document.location.protocol === 'https:' ? 'wss:' : 'ws:';
+	const portSuffix = document.location.port === '' ? '' : `:${document.location.port}`;
+	let connection = new WebSocket(`${protocol}//${document.location.hostname}${portSuffix}`);
 
 	connection.onopen = async function () {
 		connection.send(JSON.stringify({type: 'init'}));
