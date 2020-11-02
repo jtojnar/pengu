@@ -5,6 +5,7 @@
 	"private": true,
 	"dependencies": {
 		"cookie-parser": "^1.4.2",
+		"es6-promisify": "^6.1.1",
 		"express": "^4.13.4",
 		"express-session": "^1.13.0",
 		"morgan": "^1.7.0",
@@ -17,8 +18,9 @@
 		"node": "^15.0.0",
 		"npm": "^7.0"
 	},
+	"main": "src/index.js",
 	"scripts": {
-		"start": "node server.js",
+		"start": "node src/index.js",
 		"dev": "npm run --prefix assets/ dev",
 		"build": "npm run --prefix assets/ build"
 	},
