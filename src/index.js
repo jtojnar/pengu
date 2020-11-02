@@ -280,7 +280,7 @@ async function runApp() {
 	});
 
 	function exitHandler(options) {
-		console.log('Server is going down')
+		console.log('Server is going down');
 		for (let client of clients) {
 			client.drop(pengu.SERVER_GOING_DOWN, 'Server is going down');
 		}

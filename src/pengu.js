@@ -1,4 +1,4 @@
-var pengu = {}
+var pengu = {};
 
 // Errors
 pengu.NO_USERNAME_PROVIDED = 4001;

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 function Polyline() {
 	if(arguments.length == 1 && arguments[0]._class == 'Polyline') {
 		this.points = arguments[0].points;
@@ -23,7 +23,7 @@ Polyline.prototype.containsPoint = function(point) {
 		}
 	}
 	return c;
-}
+};
 Polyline.prototype.getIntersections = function(line) {
 	var lastCoords = this.points[0];
 	var intersections = [];
@@ -35,7 +35,7 @@ Polyline.prototype.getIntersections = function(line) {
 		lastCoords = coords;
 	}
 	return intersections;
-}
+};
 
 function Polygon() {
 	if (arguments.length == 1 && arguments[0]._class == 'Polygon') {
@@ -61,10 +61,10 @@ function Line() {
 }
 Line.prototype.toString = function() {
 	return this.start + '→' + this.end;
-}
+};
 Line.prototype.getLength = function() {
 	return Math.sqrt(Math.pow(this.start.x - this.end.x, 2) + Math.pow(this.start.y - this.end.y, 2));
-}
+};
 Line.prototype.getIntersection = function(line2) {
 	var line1 = this;
 	var uline1_t = (line2.end.x - line2.start.x) * (line1.start.y - line2.start.y) - (line2.end.y - line2.start.y) * (line1.start.x - line2.start.x);
@@ -87,7 +87,7 @@ Line.prototype.getIntersection = function(line2) {
 			return false; // Parallel
 		}
 	}
-}
+};
 
 function Point() {
 	if(arguments.length == 1 && arguments[0]._class == 'Point') {
@@ -103,13 +103,13 @@ function Point() {
 }
 Point.prototype.toString = function() {
 	return '[' + this.x + ',' + this.y + ']';
-}
+};
 Point.prototype.getDistance = function(point) {
 	if(!point instanceof Point) {
 		throw new Error('point isn’t instance of Point');
 	}
 	return (new Line(this, point)).getLength();
-}
+};
 
 exports.Point = Point;
 exports.Polyline = Polyline;

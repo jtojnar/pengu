@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			dragOffset = {
 				top: e.pageY - offset.top,
 				left: e.pageX - offset.left
-			}
+			};
 		});
 	});
 

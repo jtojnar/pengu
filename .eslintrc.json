@@ -1,0 +1,11 @@
+{
+	"rules": {
+		"semi": 2,
+		"quotes": [2, "single", "avoid-escape"],
+		"no-underscore-dangle": 0
+	},
+	"env": {
+		"es2020": true,
+		"node": true
+	}
+}
