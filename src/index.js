@@ -14,6 +14,11 @@ const { Line, Point } = poly;
 const pengu = require('./pengu');
 const mapUtils = require('./mapUtils');
 const { promisify } = require('es6-promisify');
+const session = require('express-session');
+const { signedCookie } = require('cookie-parser');
+const morgan = require('morgan');
+const serveStatic = require('serve-static');
+const fs = require('fs');
 
 function findById(arr, id) {
 	for (let item of arr) {
@@ -29,15 +34,13 @@ async function runApp() {
 
 	app.set('port', process.env.PORT ?? 8080);
 
-	let session = require('express-session');
-	let signedCookie = require('cookie-parser').signedCookie;
 	let sessionStore = new session.MemoryStore();
 	let secret = Math.random().toString();
 	app.use(session({store: sessionStore, resave: true, saveUninitialized: true, secret: secret, cookie: { maxAge: 10000 }, key: 'sid'}));
 
 	let env = process.env.NODE_ENV ?? 'development';
 	if (env === 'development') {
-		app.use(require('morgan')('combined'));
+		app.use(morgan('combined'));
 	}
 
 	app.get('/', function(req, res) {
@@ -49,7 +52,6 @@ async function runApp() {
 		}
 	});
 
-	let serveStatic = require('serve-static');
 	app.use('/content', serveStatic(path.join(__dirname, '../content')));
 	app.use('/', serveStatic(path.join(__dirname, '../client')));
 
@@ -74,7 +76,7 @@ async function runApp() {
 
 	let clients = [];
 	let players = {};
-	let rooms = JSON.parse(require('fs').readFileSync(path.join(__dirname, '../content/world/map.json'), 'utf8'), function (key, value) {
+	let rooms = JSON.parse(fs.readFileSync(path.join(__dirname, '../content/world/map.json'), 'utf8'), function (key, value) {
 		let type;
 		if (value && typeof value === 'object') {
 			type = value._class;
@@ -84,7 +86,7 @@ async function runApp() {
 		}
 		return value;
 	});
-	let items = JSON.parse(require('fs').readFileSync(path.join(__dirname, '../content/items/items.json'), 'utf8'));
+	let items = JSON.parse(fs.readFileSync(path.join(__dirname, '../content/items/items.json'), 'utf8'));
 
 	let dbEnabled = _dbUri !== null;
 	let pgpool = new pg.Pool({connectionString: _dbUri});
