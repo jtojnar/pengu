@@ -89,7 +89,7 @@ async function runApp() {
 	});
 	let items = JSON.parse(fs.readFileSync(path.join(__dirname, '../content/items/items.json'), 'utf8'));
 
-	let _dbUri = process.env.DATABASE_URL;
+	let _dbUri = process.env.DATABASE_URL ?? null;
 	let dbEnabled = _dbUri !== null;
 	let pgpool = null;
 	let registered = {};
