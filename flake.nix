@@ -17,9 +17,11 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
       in {
-        devShell = pkgs.mkShell {
+        devShells.default = pkgs.mkShell {
           nativeBuildInputs = [
-            pkgs.nodejs_latest
+            # Work around a bug in source-map.
+            # https://github.com/parcel-bundler/parcel/issues/8005
+            pkgs.nodejs-17_x
           ];
         };
       }
