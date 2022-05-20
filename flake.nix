@@ -19,9 +19,7 @@
       in {
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = [
-            # Work around a bug in source-map.
-            # https://github.com/parcel-bundler/parcel/issues/8005
-            pkgs.nodejs-17_x
+            pkgs.nodejs_latest
           ];
         };
       }
