@@ -3,7 +3,7 @@
 	"version": "0.0.0",
 	"private": true,
 	"dependencies": {
-		"jsx-dom": "^7.0.2"
+		"jsx-dom": "^8.0.0"
 	},
 	"devDependencies": {
 		"@babel/preset-react": "^7.10.4",
