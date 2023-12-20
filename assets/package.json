@@ -12,6 +12,7 @@
 	},
 	"scripts": {
 		"dev": "parcel watch index.html --dist-dir ../client/ --public-url ./",
-		"build": "parcel build index.html --dist-dir ../client/ --public-url ./"
+		"build": "parcel build index.html --dist-dir ../client/ --public-url ./",
+		"lint": "eslint --ext .jsx,.js ."
 	}
 }

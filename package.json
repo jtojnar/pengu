@@ -24,7 +24,8 @@
 	"scripts": {
 		"start": "node src/index.js",
 		"dev": "npm run --prefix assets/ dev",
-		"build": "npm run --prefix assets/ build"
+		"build": "npm run --prefix assets/ build",
+		"lint": "npm run --prefix assets/ lint"
 	},
 	"workspaces": [
 		"assets"

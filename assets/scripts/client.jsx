@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const debugMode = localStorage.getItem('debug') === '1';
 
 	const view = document.getElementById('view');
-	const overlay = <div class="overlay"><div class="spinner">Načítání…</div></div>;
+	const overlay = <div className="overlay"><div className="spinner">Načítání…</div></div>;
 	view.parentNode.appendChild(overlay);
 
 	let map = null;
@@ -61,10 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	view.appendChild(canvas);
 
 	const log = (
-		<div class="log dialogue">
-			<h2 class="dialogue-header">Záznam chatu</h2>
-			<a href="#" class="close">×</a>
-			<div class="dialogue-inner"></div>
+		<div className="log dialogue">
+			<h2 className="dialogue-header">Záznam chatu</h2>
+			<a href="#" className="close">×</a>
+			<div className="dialogue-inner"></div>
 		</div>
 	);
 	view.appendChild(log);
@@ -83,10 +83,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	const inventory = (
-		<div class="inventory dialogue">
-			<h2 class="dialogue-header">Šatník</h2>
-			<a href="#" class="close">×</a>
-			<div class="dialogue-inner"></div>
+		<div className="inventory dialogue">
+			<h2 className="dialogue-header">Šatník</h2>
+			<a href="#" className="close">×</a>
+			<div className="dialogue-inner"></div>
 		</div>
 	);
 	view.appendChild(inventory);
@@ -299,8 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		};
 		players[name] = {
 			element: (
-				<div data-name={name} data-room={room} class="penguin" style={style}>
-					<div class="message hidden">
+				<div data-name={name} data-room={room} className="penguin" style={style}>
+					<div className="message hidden">
 						<p>I am a penguin eating zebra filled with bubblegum</p>
 					</div>
 				</div>
@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				}
 			}
 
-			players[name].element.appendChild(<img src={'/content/items/' + item.file} class="clothing" style={style} />);
+			players[name].element.appendChild(<img src={'/content/items/' + item.file} className="clothing" style={style} />);
 		}
 	}
 	function fillInventory() {
@@ -458,7 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				'top': `${layerdata.y}px`,
 				'z-index': `${typeof layerdata.z !== 'undefined' ? layerdata.z : 200}`,
 			};
-			const layer = <img class="layer" style={style} />;
+			const layer = <img className="layer" style={style} />;
 
 			let p = new Promise((resolve) => {
 				layer.addEventListener('load', resolve);
